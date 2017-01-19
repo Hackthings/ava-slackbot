@@ -1,0 +1,43 @@
+{
+  "variables": {
+    "DOCKER_USERNAME": "{{env `DOCKER_USERNAME`}}",
+    "DOCKER_PASSWORD": "{{env `DOCKER_PASSWORD`}}",
+    "EXPORT_PATH": "{{env `TRAVIS_BRANCH`}}.tar",
+    "IMAGE_COMMIT_TAG": "{{env `TRAVIS_COMMIT`}}"
+  },
+  "builders": [{
+    "type": "docker",
+    "image": "imageintelligence/python",
+    "export_path": "{{user `EXPORT_PATH`}}"
+  }],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "{{pwd}}/",
+      "destination": "/root/app"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "cd /root/app",
+        "make install",
+        "make pep"
+      ]
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "docker-import",
+        "repository": "imageintelligence/skeleton-python",
+        "tag": "{{user `IMAGE_COMMIT_TAG`}}"
+      },
+      {
+        "type": "docker-push",
+        "login": true,
+        "login_username": "{{user `DOCKER_USERNAME`}}",
+        "login_password": "{{user `DOCKER_PASSWORD`}}"
+      }
+    ]
+  ]
+}

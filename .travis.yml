@@ -1,0 +1,11 @@
+language: generic
+services:
+- docker
+install: |
+  sudo pip install blingtron --upgrade
+  bling --version
+
+  sudo pip install pep8
+  make pep
+script:
+- bling build --publish
