@@ -16,7 +16,7 @@ $ cd ava-slack-bot/
 Setup your virtual environment:
 
 ```
-$ mkvirtualenv ava-slack-bot.
+$ mkvirtualenv ava-slack-bot
 ```
 
 Download dependencies:
