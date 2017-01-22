@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
-import urllib
-import cStringIO
-
+import requests
+from StringIO import StringIO
 from PIL import Image, ImageDraw
-
-FONT_PADDING_LEFT = 5
-FONT_PADDING_BOTTOM = 12
 
 
 def download_image(url):
-    file = cStringIO.StringIO(urllib.urlopen(url).read())
-    return Image.open(file)
+    response = requests.get(url, stream=True)
+    if response.status_code != 200:
+        return None
+    return Image.open(StringIO(response.content))
 
 
 def draw_bounding_boxes(image, objects):
@@ -25,10 +23,12 @@ def draw_bounding_boxes(image, objects):
         x_max = bounding_box['xMax']
         y_max = bounding_box['yMax']
 
-        draw.rectangle([x_min, y_min, x_max, y_max])
+        box_pos = [x_min, y_min, x_max, y_max]
+        for i in xrange(2):
+            draw.rectangle(box_pos, outline='red')
+            box_pos = [c + 1 for c in box_pos]
 
-        label = '%s %s' % (detection_class, confidence)
-        draw.text(
-            [x_min + FONT_PADDING_LEFT, y_max - FONT_PADDING_BOTTOM], label
-        )
+        label = '%s %.4f' % (detection_class, confidence)
+        label_pos = [x_min + 4, y_max - 12]  # add padding to make text visible.
+        draw.text(label_pos, label, fill='red')
     return image
