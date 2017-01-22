@@ -1,13 +1,8 @@
 {
-  "name": "ava-slack-bot",
+  "name": "ava-slackbot",
   "registry": "imageintelligence",
-  "run": "python bot/run.py",
+  "run": "python run.py",
   "packer": "./packer/",
-  "env": {
-    "CUSTOM_ENVIRON_VAR_1": "everything",
-    "CUSTOM_ENVIRON_VAR_2": "is",
-    "CUSTOM_ENVIRON_VAR_3": "awesome"
-  },
   "start": [
     "-v", "$(pwd):/app",
     "-t", "-i",

@@ -1,6 +1,6 @@
-# Ava Slack bot
+# ava-slackbot
 
-**Welcome to ava-slack-bot!**
+**Welcome to ava-slackbot!**
 
 This project houses our Slack bot that allows interfacing with Ava.
 
@@ -9,14 +9,14 @@ This project houses our Slack bot that allows interfacing with Ava.
 Clone the project:
 
 ```
-$ git clone git@github.com:ImageIntelligence/ava-slack-bot.git
-$ cd ava-slack-bot/
+$ git clone git@github.com:ImageIntelligence/ava-slackbot.git
+$ cd ava-slackbot/
 ```
 
 Setup your virtual environment:
 
 ```
-$ mkvirtualenv ava-slack-bot
+$ mkvirtualenv ava-slackbot
 ```
 
 Download dependencies:
