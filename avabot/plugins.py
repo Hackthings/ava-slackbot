@@ -33,5 +33,5 @@ def tag(message, url):
             message.reply('Ava failed to the image "$s"' % url)
             return
         image = draw_bounding_boxes(image, tag_result['results'][0]['objects'])
-        image.save('test_output.png', 'PNG')
+        image.show()
         message.reply('Ava tagged and saved image')
