@@ -16,7 +16,7 @@ def draw_rectangle_label(context, rect_pos, label, background_color, font_color=
     context.line([x_min, y_min, x_max, y_min], fill=background_color, width=12)
 
     # draw the label on top of the label background.
-    label_pos = [x_min + 2, y_min - 6]
+    label_pos = [x_min + 4, y_min - 6]
     context.text(label_pos, label, fill=font_color)
 
     return context

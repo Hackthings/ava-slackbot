@@ -5,6 +5,7 @@ from StringIO import StringIO
 from PIL import Image, ImageDraw
 from slackbot.bot import settings
 
+from avabot.utils.constants import CLASS_COLOR_MAP
 from avabot.vendor.pil_extensions import draw_detection_region
 
 
@@ -15,7 +16,9 @@ def download_image(url):
     return Image.open(StringIO(response.content))
 
 
-def draw_bounding_boxes(image, objects, ignore_min_confidence=settings.MIN_CONFIDENCE):
+def draw_bounding_boxes(
+    image, objects, ignore_min_confidence=settings.MIN_CONFIDENCE, color_map=CLASS_COLOR_MAP
+):
     draw = ImageDraw.Draw(image)
     for obj in objects:
         if obj['confidence'] < ignore_min_confidence:
@@ -29,5 +32,5 @@ def draw_bounding_boxes(image, objects, ignore_min_confidence=settings.MIN_CONFI
         pos = [x_min, y_min, x_max, y_max]
         label = '%s %.4f' % (obj['class'], obj['confidence'])
 
-        draw_detection_region(draw, pos, label, 'red')
+        draw_detection_region(draw, pos, label, color_map[obj['class']])
     return image
