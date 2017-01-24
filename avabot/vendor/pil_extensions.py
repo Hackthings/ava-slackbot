@@ -9,10 +9,20 @@ def draw_rectangle(context, pos, outline=None, width=1):
     return context
 
 
-def draw_detection_region(context, pos, label, color):
-    x_min, y_min, x_max, y_max = pos
-    label_pos = [x_min + 4, y_max - 12]  # add padding to make text visible.
+def draw_rectangle_label(context, rect_pos, label, background_color, font_color='white'):
+    x_min, y_min, x_max, y_max = rect_pos
 
-    draw_rectangle(context, pos, color)
-    context.text(label_pos, label, fill=color)
+    # draw background for our fancy label (top of the rectangle).
+    context.line([x_min, y_min, x_max, y_min], fill=background_color, width=12)
+
+    # draw the label on top of the label background.
+    label_pos = [x_min + 2, y_min - 6]
+    context.text(label_pos, label, fill=font_color)
+
+    return context
+
+
+def draw_detection_region(context, pos, label, color):
+    context = draw_rectangle(context, pos, color)
+    context = draw_rectangle_label(context, pos, label, background_color=color)
     return context

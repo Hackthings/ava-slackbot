@@ -18,6 +18,8 @@ def main():
 
     settings.AVA_API_ENDPOINT = os.environ['AVA_API_ENDPOINT']
     settings.API_TOKEN = os.environ['SLACK_API_TOKEN']
+    settings.MIN_CONFIDENCE = float(os.environ['MIN_CONFIDENCE'])
+
     settings.PLUGINS = [
         'avabot.plugins',
     ]
