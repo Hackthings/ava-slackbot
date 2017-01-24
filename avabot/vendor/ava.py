@@ -10,7 +10,7 @@ from slackbot.bot import settings
 
 def tag_image(url):
     payload = json.dumps({
-        'items': [{ 'url': url }],
+        'items': [{'url': url}],
         'webhookUrl': 'http://www.google.com/',
     })
     endpoint = os.path.join(settings.AVA_API_ENDPOINT, 'tag')
