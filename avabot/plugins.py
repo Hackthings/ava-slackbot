@@ -9,8 +9,8 @@ from slackbot.bot import respond_to
 from avabot.vendor.ava import tag_image
 from avabot.vendor.ava import get_image_result
 
-from utils.image_processor import download_image
-from utils.image_processor import draw_bounding_boxes
+from utils.image_processing import download_image
+from utils.image_processing import draw_bounding_boxes
 
 
 @respond_to('tag <(.*)>', re.IGNORECASE)

@@ -3,6 +3,8 @@ import requests
 from StringIO import StringIO
 from PIL import Image, ImageDraw
 
+from avabot.vendor.pil_extensions import draw_detection_region
+
 
 def download_image(url):
     response = requests.get(url, stream=True)
@@ -23,12 +25,8 @@ def draw_bounding_boxes(image, objects):
         x_max = bounding_box['xMax']
         y_max = bounding_box['yMax']
 
-        box_pos = [x_min, y_min, x_max, y_max]
-        for i in xrange(2):
-            draw.rectangle(box_pos, outline='red')
-            box_pos = [c + 1 for c in box_pos]
-
+        pos = [x_min, y_min, x_max, y_max]
         label = '%s %.4f' % (detection_class, confidence)
-        label_pos = [x_min + 4, y_max - 12]  # add padding to make text visible.
-        draw.text(label_pos, label, fill='red')
+
+        draw_detection_region(draw, pos, label, 'red')
     return image
