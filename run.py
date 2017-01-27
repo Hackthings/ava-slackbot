@@ -16,7 +16,7 @@ def main():
     dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
     load_dotenv(dotenv_path)
 
-    settings.AVA_API_ENDPOINT = os.environ['AVA_API_ENDPOINT']
+    settings.AVA_API_ENDPOINT = 'http://' + os.environ['AVA_API_ENDPOINT']
     settings.API_TOKEN = os.environ['SLACK_API_TOKEN']
     settings.MIN_CONFIDENCE = float(os.environ['MIN_CONFIDENCE'])
     settings.AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
