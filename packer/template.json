@@ -18,6 +18,10 @@
     },
     {
       "type": "shell",
+      "inline": ["pip install blingtron"]
+    },
+    {
+      "type": "shell",
       "inline": [
         "cd /root/app",
         "make install",
