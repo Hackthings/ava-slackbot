@@ -7,6 +7,7 @@ from slackbot.bot import settings
 
 from avabot.utils.constants import CLASS_COLOR_MAP
 from avabot.vendor.pil_extensions import draw_detection_region
+from avabot.vendor.aws import s3, s3_client
 
 
 def download_image(url):
@@ -14,6 +15,24 @@ def download_image(url):
     if response.status_code != 200:
         return None
     return Image.open(StringIO(response.content))
+
+
+def upload_image(image, name, acl='public-read', encoding='JPEG'):
+    output_image = StringIO()
+    image.save(output_image, encoding, optimize=True, quality=95)
+
+    bucket = s3.Bucket(settings.S3_RESULTS_BUCKET)
+    s3_object = bucket.put_object(
+        ACL=acl,
+        Body=output_image.getvalue(),
+        Key='%s.%s' % (name, encoding.lower())
+    )
+    url = s3_client.generate_presigned_url(
+        'get_object',
+        Params={'Bucket': settings.S3_RESULTS_BUCKET, 'Key': s3_object.key},
+        ExpiresIn=100
+    )
+    return s3_object, url
 
 
 def draw_bounding_boxes(

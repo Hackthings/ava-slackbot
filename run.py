@@ -19,6 +19,9 @@ def main():
     settings.AVA_API_ENDPOINT = os.environ['AVA_API_ENDPOINT']
     settings.API_TOKEN = os.environ['SLACK_API_TOKEN']
     settings.MIN_CONFIDENCE = float(os.environ['MIN_CONFIDENCE'])
+    settings.AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+    settings.AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
+    settings.S3_RESULTS_BUCKET = os.environ['S3_RESULTS_BUCKET']
 
     settings.PLUGINS = [
         'avabot.plugins',

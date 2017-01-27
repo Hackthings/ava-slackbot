@@ -6,3 +6,4 @@ coverage==4.2
 logging==0.4.9.6
 requests==2.12.5
 Pillow==4.0.0
+boto3==1.4.4
