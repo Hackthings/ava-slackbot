@@ -29,7 +29,7 @@
     [
       {
         "type": "docker-import",
-        "repository": "imageintelligence/skeleton-python",
+        "repository": "imageintelligence/ava-slackbot",
         "tag": "{{user `IMAGE_COMMIT_TAG`}}"
       },
       {
