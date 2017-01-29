@@ -25,7 +25,7 @@ def upload_image(image, name, acl='public-read', encoding='JPEG', expires_in=315
     s3_object = bucket.put_object(
         ACL=acl,
         Body=output_image.getvalue(),
-        Key='%s.%s' % (name, encoding.lower())
+        Key='detections/%s.%s' % (name, encoding.lower())
     )
     url = s3_client.generate_presigned_url(
         'get_object',
