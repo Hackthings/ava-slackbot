@@ -17,7 +17,7 @@ def download_image(url):
     return Image.open(StringIO(response.content))
 
 
-def upload_image(image, name, acl='public-read', encoding='JPEG'):
+def upload_image(image, name, acl='public-read', encoding='JPEG', expires_in=31536000):
     output_image = StringIO()
     image.save(output_image, encoding, optimize=True, quality=95)
 
@@ -30,7 +30,7 @@ def upload_image(image, name, acl='public-read', encoding='JPEG'):
     url = s3_client.generate_presigned_url(
         'get_object',
         Params={'Bucket': settings.S3_RESULTS_BUCKET, 'Key': s3_object.key},
-        ExpiresIn=100
+        ExpiresIn=expires_in  # expire after 1 year.
     )
     return s3_object, url
 
