@@ -29,7 +29,7 @@ def tag(message, url):
     print('[debug] download image')
     image = download_image(url)
     if not image:
-        return message.reply('Ava failed to the image "$s"' % url)
+        return message.reply('Ava failed to the image "%s"' % url)
 
     # we're only ever pushing one url at a time.
     print('[debug] drawing bounding on objects in image')
