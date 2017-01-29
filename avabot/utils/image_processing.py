@@ -5,7 +5,7 @@ from StringIO import StringIO
 from PIL import Image, ImageDraw
 from slackbot.bot import settings
 
-from avabot.utils.constants import CLASS_COLOR_MAP
+from avabot.utils.constants import CLASS_COLOR_MAP, DEFAULT_CLASS_COLOR
 from avabot.vendor.pil_extensions import draw_detection_region
 from avabot.vendor.aws import s3, s3_client
 
@@ -35,9 +35,11 @@ def upload_image(image, name, acl='public-read', encoding='JPEG', expires_in=315
     return s3_object, url
 
 
-def draw_bounding_boxes(
-    image, objects, ignore_min_confidence=settings.MIN_CONFIDENCE, color_map=CLASS_COLOR_MAP
-):
+def _get_bounding_box_color(cls, color_map=CLASS_COLOR_MAP, default_color=DEFAULT_CLASS_COLOR):
+    return color_map.get(cls, default_color)
+
+
+def draw_bounding_boxes(image, objects, ignore_min_confidence=settings.MIN_CONFIDENCE):
     draw = ImageDraw.Draw(image)
     for obj in objects:
         if obj['confidence'] < ignore_min_confidence:
@@ -51,5 +53,5 @@ def draw_bounding_boxes(
         pos = [x_min, y_min, x_max, y_max]
         label = '%s %.4f' % (obj['class'], obj['confidence'])
 
-        draw_detection_region(draw, pos, label, color_map[obj['class']])
+        draw_detection_region(draw, pos, label, _get_bounding_box_color(obj['class']))
     return image

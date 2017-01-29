@@ -22,3 +22,5 @@ CLASS_COLOR_MAP = {
     'train': (145, 91, 81),
     'tvmonitor': (0, 0, 0),
 }
+
+DEFAULT_CLASS_COLOR = (0, 0, 0)
