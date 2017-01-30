@@ -23,7 +23,7 @@ def tag(message, url):
 
     print('[debug] polling for result until done')
     tag_result = poll_until_complete(job_id)
-    if tag_result is None:
+    if tag_result is None or tag_result['status']['code'] != 'COMPLETED_SUCCESSFULLY':
         return message.reply('Ava died... something went wrong')
 
     print('[debug] download image')
