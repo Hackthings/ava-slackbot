@@ -8,6 +8,7 @@ from slackbot.bot import respond_to
 
 from avabot.vendor.ava import tag_image
 from avabot.vendor.ava import poll_until_complete
+from avabot.vendor.slack import should_respond_to_message
 
 from utils.image_processing import download_image, upload_image
 from utils.image_processing import draw_bounding_boxes
@@ -16,6 +17,9 @@ from utils.image_processing import draw_bounding_boxes
 @respond_to('tag <(.*)>', re.IGNORECASE)
 def tag(message, url):
     print('[debug] received url from client "%s"' % url)
+    if not should_respond_to_message(message):
+        print('[debug] not responding to slack message')
+        return message.reply('No soup for you')
 
     job_id = tag_image(url, 'https://www.google.com/')
     if not job_id:
