@@ -10,11 +10,11 @@ from avabot.vendor.pil_extensions import draw_detection_region
 from avabot.vendor.aws import s3, s3_client
 
 
-def download_image(url):
+def download_image(url, convert='RGB'):
     response = requests.get(url, stream=True)
     if response.status_code != 200:
         return None
-    return Image.open(StringIO(response.content))
+    return Image.open(StringIO(response.content)).convert(convert)
 
 
 def upload_image(image, name, acl='public-read', encoding='JPEG', expires_in=31536000):
