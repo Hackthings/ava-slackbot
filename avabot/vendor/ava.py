@@ -59,7 +59,7 @@ class AvaAPI(object):
         self.endpoint = endpoint
         self.version = version
 
-    def _api_request(self, method, endpoint,  payload=None, headers=None):
+    def _api_request(self, method, endpoint, payload=None, headers=None):
         payload = payload or {}
         headers = headers or {}
 
