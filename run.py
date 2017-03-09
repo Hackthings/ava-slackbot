@@ -1,35 +1,40 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
-import logging
 import os
+import logging
 
 from slackbot.bot import Bot
 from slackbot.bot import settings
 
-from dotenv import load_dotenv
+from avabot.config import Config
+from avabot.vendor.ava import AvaAPI
 
 
 def main():
-    logging.basicConfig()
+    logging.basicConfig(level=logging.INFO)
 
-    dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
-    load_dotenv(dotenv_path)
+    logging.info('loading configuration variables')
 
-    settings.AVA_API_ENDPOINT = os.environ['AVA_API_ENDPOINT']
-    settings.API_TOKEN = os.environ['SLACK_API_TOKEN']
-    settings.MIN_CONFIDENCE = float(os.environ['MIN_CONFIDENCE'])
-    settings.AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
-    settings.AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
-    settings.S3_RESULTS_BUCKET = os.environ['S3_RESULTS_BUCKET']
-    settings.WHITELIST_CHANNELS = os.environ['WHITELIST_CHANNELS'].split(',')
+    config = Config(os.path.join(os.path.dirname(__file__), '.env'))
+    config.load()
+
+    ava_client = AvaAPI(
+        config.get('AVA_CLIENT_ID'),
+        config.get('AVA_CLIENT_SECRET'),
+        config.get('AVA_API_ENDPOINT'),
+        config.get('AVA_API_VERSION')
+    )
 
     settings.PLUGINS = [
         'avabot.plugins',
     ]
+    settings.API_TOKEN = config.get('SLACK_API_TOKEN')
+    settings.config = config
+    settings.ava_client = ava_client
 
     bot = Bot()
-    print('bot running... ready to accept messages')
+    logging.info('ava-slackbot running. ready to accept messages')
     bot.run()
 
 if __name__ == '__main__':

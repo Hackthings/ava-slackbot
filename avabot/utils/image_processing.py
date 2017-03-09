@@ -9,6 +9,13 @@ from avabot.utils.constants import CLASS_COLOR_MAP, DEFAULT_CLASS_COLOR
 from avabot.vendor.pil_extensions import draw_detection_region
 from avabot.vendor.aws import s3, s3_client
 
+config = settings.config
+DEFAULT_S3_RESULTS_BUCKET = config.get('S3_RESULTS_BUCKET')
+DEFAULT_BUCKET_ACL = 'public-read'
+DEFAULT_IMAGE_ENCODING = 'JPEG'
+DEFAULT_EXPIRES_IN = 31536000
+DEFAULT_MIN_CONFIDENCE = config.get('MIN_CONFIDENCE')
+
 
 def download_image(url, convert='RGB'):
     response = requests.get(url, stream=True)
@@ -17,11 +24,18 @@ def download_image(url, convert='RGB'):
     return Image.open(StringIO(response.content)).convert(convert)
 
 
-def upload_image(image, name, acl='public-read', encoding='JPEG', expires_in=31536000):
+def upload_image(
+    image,
+    name,
+    bucket_name=DEFAULT_S3_RESULTS_BUCKET,
+    acl=DEFAULT_BUCKET_ACL,
+    encoding=DEFAULT_IMAGE_ENCODING,
+    expires_in=DEFAULT_EXPIRES_IN
+):
     output_image = StringIO()
     image.save(output_image, encoding, optimize=True, quality=95)
 
-    bucket = s3.Bucket(settings.S3_RESULTS_BUCKET)
+    bucket = s3.Bucket(bucket_name)
     s3_object = bucket.put_object(
         ACL=acl,
         Body=output_image.getvalue(),
@@ -29,7 +43,7 @@ def upload_image(image, name, acl='public-read', encoding='JPEG', expires_in=315
     )
     url = s3_client.generate_presigned_url(
         'get_object',
-        Params={'Bucket': settings.S3_RESULTS_BUCKET, 'Key': s3_object.key},
+        Params={'Bucket': bucket_name, 'Key': s3_object.key},
         ExpiresIn=expires_in  # expire after 1 year.
     )
     return s3_object, url
@@ -39,7 +53,7 @@ def _get_bounding_box_color(cls, color_map=CLASS_COLOR_MAP, default_color=DEFAUL
     return color_map.get(cls, default_color)
 
 
-def draw_bounding_boxes(image, objects, ignore_min_confidence=settings.MIN_CONFIDENCE):
+def draw_bounding_boxes(image, objects, ignore_min_confidence=DEFAULT_MIN_CONFIDENCE):
     draw = ImageDraw.Draw(image)
     for obj in objects:
         if obj['confidence'] < ignore_min_confidence:
