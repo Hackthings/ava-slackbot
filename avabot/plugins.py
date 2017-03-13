@@ -20,7 +20,9 @@ DEFAULT_WEBHOOK_URL = 'https://www.google.com/'
 
 @respond_to('detect <(.*)>', re.IGNORECASE)
 def detect(message, url):
-    logging.info('received url from client "%s"' % url)
+    channel_id = message.body['channel']
+
+    logging.info('received url from client (%s) "%s"' % (channel_id, url))
     if not should_respond_to_message(message):
         logging.warning('not responding to slack message')
         return message.reply('No soup for you')
@@ -33,6 +35,7 @@ def detect(message, url):
     logging.info('polling for result until done')
     tag_result = client.poll_until_complete(job_id)
     if tag_result is None or tag_result['status']['code'] != 'COMPLETED_SUCCESSFULLY':
+        logging.error('polling complete found api error')
         return message.reply('Ava died... something went wrong')
 
     logging.info('downloading image %s' % url)
