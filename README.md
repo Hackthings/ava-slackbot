@@ -25,9 +25,6 @@ Download dependencies:
 $ make install
 ```
 
-Run the project inside a container:
-
 ```
-$ bling build
-$ bling start
+$ python run.py
 ```

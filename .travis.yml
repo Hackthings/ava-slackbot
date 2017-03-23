@@ -1,8 +1,9 @@
-language: generic
+dist: trusty
 services:
-- docker
-install:
-- sudo pip install blingtron --upgrade && bling --version
-- sudo pip install pep8 && make pep
+  - docker
+env:
+  TRAVIS_BRANCH_CLEAN=$(sed 's/\//-/g' <<< $TRAVIS_BRANCH)
+  DOCKER_TAG="$TRAVIS_COMMIT.$TRAVIS_BRANCH_CLEAN"
+  APP_NAME=ava-slackbot
 script:
-- bling build --publish
+  - bash ./scripts/build.sh

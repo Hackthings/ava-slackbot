@@ -14,7 +14,4 @@ Session.vim
 
 .env
 
-.bling/
-.bling.lock
-
 .DS_Store
