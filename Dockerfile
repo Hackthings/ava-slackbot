@@ -6,4 +6,4 @@ WORKDIR /root/app
 
 RUN make install && make pep
 
-CMD python run.py
+CMD bash -lc "python run.py"
