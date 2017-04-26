@@ -12,8 +12,11 @@ from avabot.vendor.ava import AvaAPI
 
 
 def main():
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
+
     logging.getLogger('boto').setLevel(logging.CRITICAL)
+    logging.getLogger('boto3').setLevel(logging.CRITICAL)
+    logging.getLogger('botocore').setLevel(logging.CRITICAL)
 
     logging.info('loading configuration variables')
 
