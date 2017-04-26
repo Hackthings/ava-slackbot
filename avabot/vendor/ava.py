@@ -10,7 +10,7 @@ import logging
 
 
 class AvaAPIAuth(object):
-    AUTH_TOKEN_REFRESH_THRESHOLD = 1000 * 60 * 5  # 5 minutes in milliseconds
+    AUTH_TOKEN_REFRESH_THRESHOLD = 1000 * 30  # 0.5 minutes in milliseconds
 
     def __init__(self, client_id, client_secret, endpoint, version):
         self.client_id = client_id
@@ -24,7 +24,7 @@ class AvaAPIAuth(object):
             return True
 
         now = int(datetime.datetime.now().strftime('%s')) * 1000
-        return now >= (self._auth['expires_at'] + self.__class__.AUTH_TOKEN_REFRESH_THRESHOLD)
+        return now >= (self._auth['expires_at'] - self.__class__.AUTH_TOKEN_REFRESH_THRESHOLD)
 
     def request_new_token(self):
         auth_endpoint = os.path.join(self.endpoint, self.version, 'oauth/token')
@@ -45,6 +45,7 @@ class AvaAPIAuth(object):
     @property
     def token(self):
         if self.is_expired():
+            logging.debug('token is expired, refreshing token')
             self.request_new_token()
         return self._auth['token']
 
@@ -69,7 +70,7 @@ class AvaAPI(object):
 
         headers['Authorization'] = 'Bearer %s' % token
         response = method(endpoint, data=json.dumps(payload), headers=headers)
-        logging.debug('received response %s, %s' % (endpoint, response.status_code))
+        logging.debug('received response code: %s (%s)' % (response.status_code, endpoint))
 
         return response.json() if response.status_code == 200 else None
 
