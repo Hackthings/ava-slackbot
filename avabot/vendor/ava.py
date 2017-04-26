@@ -69,6 +69,8 @@ class AvaAPI(object):
 
         headers['Authorization'] = 'Bearer %s' % token
         response = method(endpoint, data=json.dumps(payload), headers=headers)
+        logging.debug('received response %s, %s' % (endpoint, response.status_code))
+
         return response.json() if response.status_code == 200 else None
 
     def detect(self, url, webhook_url):
@@ -86,13 +88,13 @@ class AvaAPI(object):
     def get_image_result(self, job_id):
         endpoint = os.path.join(self.endpoint, self.version, 'detect', job_id)
         response = self._api_request(requests.get, endpoint)
-        return response if response is not None else None
+        return response if response is not None else {}
 
     def poll_until_complete(self, job_id):
         tag_result = self.get_image_result(job_id)
         while tag_result and tag_result['status']['code'] == self.__class__.IN_PROGRESS_STATUS:
             tag_result = self.get_image_result(job_id)
-            logging.info('status for "%s": %s' % (job_id, tag_result['status']))
+            logging.info('status for "%s": %s' % (job_id, tag_result.get('status', 'N/A')))
             time.sleep(0.5)
 
         if not tag_result or tag_result['status']['code'] in self.__class__.ERROR_STATUSES:
