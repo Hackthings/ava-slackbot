@@ -1,17 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
-import os
+import json
 import re
 import logging
 
 from slackbot import settings
 from slackbot.bot import respond_to
-
 from avabot.vendor.slack import should_respond_to_message
-
-from utils.image_processing import download_image, upload_image
-from utils.image_processing import draw_bounding_boxes
 
 config = settings.config
 client = settings.ava_client
@@ -35,23 +31,10 @@ def detect(message, url):
     logging.info('polling for result until done')
     tag_result = client.poll_until_complete(job_id)
     if tag_result is None or tag_result['status']['code'] != 'COMPLETED_SUCCESSFULLY':
+        status = tag_result['status']
+
         logging.error('polling complete found api error')
-        return message.reply('Ava died... something went wrong')
+        return message.reply('%s: %s' % (status['code'], status['message']))
 
-    logging.info('downloading image %s' % url)
-    image = download_image(url)
-    if not image:
-        logging.error('failed to download image %s' % url)
-        return message.reply('Ava failed to the image "%s"' % url)
-
-    # we're only ever pushing one url at a time.
-    logging.info('drawing bounding on objects in image')
-    image = draw_bounding_boxes(image, tag_result['results'][0]['objects'])
-
-    logging.info('uploading images to s3 for storage')
-    _, name = os.path.split(url)
-    name, _ = os.path.splitext(name)
-    _, image_url = upload_image(image, name)
-    message.reply(image_url)
-
+    message.reply(json.dumps(tag_result))
     logging.info('finished performing detection')

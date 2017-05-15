@@ -76,7 +76,7 @@ class AvaAPI(object):
 
     def detect(self, url, webhook_url):
         payload = {
-            'items': [{'url': url}], 'webhookUrl': webhook_url,
+            'items': [{'url': url}], 'webhookUrl': webhook_url, 'model': 'CLASSIFIER_GEN_01',
         }
         endpoint = os.path.join(self.endpoint, self.version, 'detect')
         headers = {
