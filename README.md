@@ -4,7 +4,7 @@
 
 **Welcome to ava-slackbot!**
 
-This project is our in house Slackbot, allowing us to interact with the Image Intelligence API (Ava).
+This project is our in-house Slackbot, allowing us to interact with the Image Intelligence API (Ava).
 
 ## Installation
 
