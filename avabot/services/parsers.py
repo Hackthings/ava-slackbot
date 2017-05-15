@@ -4,7 +4,7 @@ from typing import Dict
 
 import docopt
 
-from avabot.domain.exceptions.parse import ParseCommandException
+from ..domain.exceptions.parse import ParseCommandException
 from .. import __author__, __author_email__
 from .. import __version__
 

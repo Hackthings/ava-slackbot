@@ -10,7 +10,7 @@ from typing import Optional, Callable, Dict
 
 import requests
 
-from avabot.domain.exceptions.ava import AvaInvalidTokenException
+from ..domain.exceptions.ava import AvaInvalidTokenException
 
 
 class AvaApiAuth:

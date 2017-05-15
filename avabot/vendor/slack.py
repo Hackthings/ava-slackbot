@@ -5,9 +5,9 @@ from typing import List, Dict, Optional, Callable
 
 from slackclient import SlackClient
 
-from avabot.domain.exceptions.parse import AvaSlackbotException
 from ..config import SlackConfig
 from ..services.parsers import MessageParser
+from ..domain.exceptions.parse import AvaSlackbotException
 
 
 ParsedSlackMessage = Optional[Dict]
