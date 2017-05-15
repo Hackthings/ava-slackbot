@@ -14,6 +14,21 @@ This project is our in house Slackbot, allowing us to interact with the Image In
     git clone git@github.com:ImageIntelligence/ava-slackbot.git
     ```
 
+1. Specify the required environment variables:
+
+    Create a file at the root of this project called `local.env.list` with the following contents
+
+    ```bash
+    AVA_API_ENDPOINT=https://api.imageintelligence.com
+    AVA_API_VERSION=v1
+    AVA_CLIENT_ID=
+    AVA_CLIENT_SECRET=
+    SLACK_API_TOKEN=
+    WHITELIST_CHANNELS=
+    ```
+
+    See the Image Intelligence [docs](https://imageintelligence.com/docs) for `AVA_CLIENT_ID` and `AVA_CLIENT_SECRET`.
+
 1. Install docker and docker-compose:
 
     ```bash

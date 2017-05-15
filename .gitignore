@@ -1,17 +1,5 @@
 *.py[cod]
-
 __pycache__
 .coverage
 
-*.log
-
-.idea/
-
-*.un~
-Session.vim
-.netrwhist
-*~
-
-.env
-
-.DS_Store
+local.env.list
