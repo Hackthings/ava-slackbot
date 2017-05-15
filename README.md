@@ -4,29 +4,49 @@
 
 **Welcome to ava-slackbot!**
 
-This project houses our Slack bot that allows interfacing with Ava.
+This project is our in house Slackbot, allowing us to interact with the Image Intelligence API (Ava).
 
 ## Installation
 
-Clone the project:
+1. Clone the project:
 
-```
-$ git clone git@github.com:ImageIntelligence/ava-slackbot.git
-$ cd ava-slackbot/
-```
+    ```bash
+    git clone git@github.com:ImageIntelligence/ava-slackbot.git
+    ```
 
-Setup your virtual environment:
+1. Install docker and docker-compose:
 
-```
-$ mkvirtualenv ava-slackbot
-```
+    ```bash
+    brew install docker-compose
+    brew install cask
+    brew cask install docker
+    brew cask install docker-toolbox
+    ```
 
-Download dependencies:
+1. Start the container:
 
-```
-$ make install
-```
+    ```bash
+    docker-compose up
+    ```
 
-```
-$ python run.py
-```
+## Development
+
+1. (optional) Setup your host's local environment (IDE support):
+
+    ```bash
+    mkvirtualenv --python=/usr/local/bin/python3 ava-slackbot
+    pip install -r requirements.txt
+    ```
+
+1. Clean your project of cache files:
+
+    ```bash
+    find . -type f -name "*.pyc" -delete
+    find . -type d -name "__pycache__" -delete
+    ```
+
+1. PEP8 your Python code:
+
+    ```
+    pep8 ./ --ignore=E501,E701
+    ```
