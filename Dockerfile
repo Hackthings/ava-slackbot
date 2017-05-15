@@ -1,9 +1,8 @@
-FROM imageintelligence/python:0d22d56873095d9ef39c6e81d2369a7d3b32300d
+FROM python:3.6-alpine
 MAINTAINER David Vuong <david@imageintelligence.com>
 
 COPY . /root/app
 WORKDIR /root/app
 
-RUN make install && make pep
-
-CMD bash -lc "python run.py"
+RUN pip install -r requirements.txt && pep8 ./ --ignore=E501,E701
+CMD python run.py

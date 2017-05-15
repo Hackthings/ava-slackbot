@@ -1,0 +1,8 @@
+version: "2"
+services:
+  ava-slackbot:
+    container_name: ava-slackbot
+    build: .
+    env_file: ./local.env.list
+    volumes:
+      - ./:/root/app
