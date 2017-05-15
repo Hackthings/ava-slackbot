@@ -24,7 +24,7 @@ This project is our in house Slackbot, allowing us to interact with the Image In
     AVA_CLIENT_ID=
     AVA_CLIENT_SECRET=
     SLACK_API_TOKEN=
-    WHITELIST_CHANNELS=
+    SLACK_WHITELIST_CHANNELS=
     ```
 
     See the Image Intelligence [docs](https://imageintelligence.com/docs) for `AVA_CLIENT_ID` and `AVA_CLIENT_SECRET`.
