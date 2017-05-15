@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 import json
 
+from avabot.domain.exceptions.command import DetectionError
 from . import Command
 from ..config import Config
 from ..vendor.ava import AvaApi
 from ..vendor.slack import Slack
-
-from ..domain.command_exceptions import DetectionError
 
 
 class Detect(Command):

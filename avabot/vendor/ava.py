@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
-from typing import Optional, Callable, Dict
-
-import os
-import json
 import datetime
-import time
+import json
 import logging
+import os
+import time
+from typing import Optional, Callable, Dict
 
 import requests
 
-from ..domain.ava_exceptions import AvaInvalidTokenException
+from avabot.domain.exceptions.ava import AvaInvalidTokenException
 
 
 class AvaApiAuth:

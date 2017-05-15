@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from . import AvaSlackbotException
+from avabot.domain import AvaSlackbotException
 
 
 class DetectionError(AvaSlackbotException):

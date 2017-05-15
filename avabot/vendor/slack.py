@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 import time
-
 from typing import List, Dict, Optional, Callable
 
 from slackclient import SlackClient
+
+from avabot.domain.exceptions.parse import AvaSlackbotException
 from ..config import SlackConfig
 from ..services.parsers import MessageParser
 
-from ..domain.parse_exceptions import AvaSlackbotException
 
 ParsedSlackMessage = Optional[Dict]
 MessageHandler = Callable[[Dict], None]

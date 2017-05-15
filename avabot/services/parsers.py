@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-from .. import __author__, __author_email__
-from .. import __version__
-
-import logging
 import shlex
-import docopt
-
 from typing import Dict
 
-from ..domain.parse_exceptions import ParseCommandException
+import docopt
+
+from avabot.domain.exceptions.parse import ParseCommandException
+from .. import __author__, __author_email__
+from .. import __version__
 
 
 class Parser:
