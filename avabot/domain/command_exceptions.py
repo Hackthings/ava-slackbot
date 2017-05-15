@@ -2,5 +2,5 @@
 from . import AvaSlackbotException
 
 
-class ParseCommandException(AvaSlackbotException):
+class DetectionError(AvaSlackbotException):
     pass
