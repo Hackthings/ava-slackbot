@@ -59,8 +59,7 @@ class Slack:
             return self.message_parser.run(text, channel, user)
         except AvaSlackbotException as e:
             logging.info('"%s" deemed an invalid message by our message_parser' % text)
-            response = self._format_invalid_message(message, str(e))
-            self.client.api_call('chat.postMessage', channel=channel, text=response, as_user=True, link_names=True)
+            self.send_message(self._format_invalid_message(message, str(e)), channel)
             return None
 
     def _process_messages(self, messages: List[Dict], handler: MessageHandler) -> None:
@@ -79,3 +78,6 @@ class Slack:
         else:
             logging.error('failed to connect to slack, perhaps invalid token')
             raise RuntimeError()
+
+    def send_message(self, message: str, channel: str) -> None:
+        self.client.api_call('chat.postMessage', channel=channel, text=message, as_user=True, link_names=True)

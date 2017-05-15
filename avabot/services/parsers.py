@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from .. import __author__, __author_email__
+from .. import __version__
+
 import logging
 import shlex
 import docopt
@@ -20,6 +23,7 @@ usage:
     @ava detect <url> [--model=<model>] [--raw-json]
     @ava find-person <url> [--model=<model>] [--raw-json]
     @ava search <id>
+    @ava (-h|--help|-v|--version)
 
 commands:
     detect           makes a request against the /v1/detect endpoint
@@ -37,14 +41,24 @@ options:
     --model=<model>  the NN model to run detections with
     --raw-json       returns the raw JSON response from the Image Intelligence API
 
-    """
+%s <%s>
+    """ % (__author__, __author_email__)
 
     def run(self, message: str, channel: str, user: str) -> Dict:
         filtered_message = shlex.split(message)[1:]
         filtered_message = map(lambda i: i.strip('<>'), filtered_message)
         filtered_message = list(filtered_message)
 
+        slack_data = {'channel': channel, 'user': user}
         try:
-            return docopt.docopt(MessageParser.__doc__, filtered_message)
+            arguments = docopt.docopt(MessageParser.__doc__, filtered_message, help=False, version=False)
         except docopt.DocoptExit as e:
             raise ParseCommandException(e)
+
+        if any((m in ('-h', '--help')) and m for m in filtered_message):
+            parsed_data = {'--extras': MessageParser.__doc__}
+        elif any((m in ('-v', '--version')) and m for m in filtered_message):
+            parsed_data = {'--extras': 'Ava Slackbot v%s' % __version__}
+        else:
+            parsed_data = arguments
+        return {**slack_data, **parsed_data}
