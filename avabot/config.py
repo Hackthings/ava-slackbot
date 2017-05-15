@@ -1,32 +1,57 @@
 # -*- coding: utf-8 -*-
 import os
-
-from dotenv import load_dotenv
-
-__all__ = ['config']
-
-config = None
+from typing import Dict
 
 
-class Config(object):
-    __shared_state = {}
+class AvaApiConfig:
+    def __init__(self, endpoint: str, version: str, client_id: str, client_secret: str) -> None:
+        self.endpoint = endpoint
+        self.version = version
+        self.client_id = client_id
+        self.client_secret = client_secret
 
-    def __init__(self, path):
-        self.__dict__ = self.__shared_state
 
-        self.config_path = path or self.config_path
-        self._config = {}
+class SlackConfig:
+    def __init__(self, bot_id: str, api_token: str, whitelist_channels: str, websocket_delay: int) -> None:
+        self.bot_id = bot_id
+        self.api_token = api_token
+        self.whitelist_channels = whitelist_channels
+        self.websocket_delay = websocket_delay
 
-    def load(self):
-        load_dotenv(self.config_path)
 
-        self._config['AVA_API_ENDPOINT'] = os.environ['AVA_API_ENDPOINT']
-        self._config['AVA_API_VERSION'] = os.environ['AVA_API_VERSION']
-        self._config['AVA_CLIENT_ID'] = os.environ['AVA_CLIENT_ID']
-        self._config['AVA_CLIENT_SECRET'] = os.environ['AVA_CLIENT_SECRET']
+class Config:
+    def __init__(self, ava: AvaApiConfig, slack: SlackConfig) -> None:
+        self.ava = ava
+        self.slack = slack
 
-        self._config['SLACK_API_TOKEN'] = os.environ['SLACK_API_TOKEN']
-        self._config['WHITELIST_CHANNELS'] = os.environ['WHITELIST_CHANNELS'].split(',')
 
-    def get(self, key):
-        return self._config[key]
+def _load_unsafe() -> Dict:
+    return {
+        'AVA_API_ENDPOINT': os.environ['AVA_API_ENDPOINT'],
+        'AVA_API_VERSION': os.environ['AVA_API_VERSION'],
+        'AVA_CLIENT_ID': os.environ['AVA_CLIENT_ID'],
+        'AVA_CLIENT_SECRET': os.environ['AVA_CLIENT_SECRET'],
+
+        'SLACK_API_TOKEN': os.environ['SLACK_API_TOKEN'],
+        'SLACK_WHITELIST_CHANNELS': os.environ['SLACK_WHITELIST_CHANNELS'],
+        'SLACK_WEBSOCKET_DELAY': int(os.environ.get('SLACK_WEBSOCKET_DELAY', 1)),
+        'SLACK_BOT_ID': os.environ.get('SLACK_BOT_ID', 'ava'),
+    }
+
+
+def load() -> Config:
+    env = _load_unsafe()
+    return Config(
+        AvaApiConfig(
+            env['AVA_API_ENDPOINT'],
+            env['AVA_API_VERSION'],
+            env['AVA_CLIENT_ID'],
+            env['AVA_CLIENT_SECRET']
+        ),
+        SlackConfig(
+            env['SLACK_BOT_ID'],
+            env['SLACK_API_TOKEN'],
+            env['SLACK_WHITELIST_CHANNELS'],
+            env['SLACK_WEBSOCKET_DELAY']
+        )
+    )
