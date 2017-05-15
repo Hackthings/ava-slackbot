@@ -37,7 +37,10 @@ class Slack:
 
     def _format_invalid_message(self, message: Dict, error_message: str) -> str:
         return '\n'.join([
-            '<@%s> Bad command, RTFM! `@ava --help` for more details. See usage below:' % message['user'],
+            '<@%s> Bad command, RTFM! `@%s --help` for more details. See usage below:' % (
+                message['user'],
+                self.config.bot_name,
+            ),
             '```',
             error_message,
             '```',
