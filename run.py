@@ -31,8 +31,12 @@ def handle_message(
             )
         elif arguments['detect']:
             Detect(config, ava_client, slack_client, **arguments)
+        elif arguments['find-person']:
+            slack_client.send_message('`find-person` not yet implemented :cry:', arguments['channel'])
+        elif arguments['search']:
+            slack_client.send_message('`search` not yet implemented :cry:', arguments['channel'])
         else:
-            logging.info(arguments)
+            logging.error('unexpected arguments %s' % arguments)
     except AvaSlackbotException as e:
         if isinstance(e.message, dict):
             error_message = json.dumps(e.message, indent=2, sort_keys=True)
