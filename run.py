@@ -2,32 +2,23 @@
 # -*- coding: utf-8 -*-
 import logging
 
+from avabot import config as app_config
+from avabot.vendor.slack import Slack
+from avabot.services.parsers import MessageParser
+
+
+def handle_message(arguments) -> None:
+    logging.info(arguments)
+
 
 def main():
     logging.basicConfig(level=logging.INFO)
-
     logging.info('init ava-slackbot!')
 
-    # config = Config(os.path.join(os.path.dirname(__file__), '.env'))
-    # config.load()
-    #
-    # ava_client = AvaAPI(
-    #     config.get('AVA_CLIENT_ID'),
-    #     config.get('AVA_CLIENT_SECRET'),
-    #     config.get('AVA_API_ENDPOINT'),
-    #     config.get('AVA_API_VERSION')
-    # )
-    #
-    # settings.PLUGINS = [
-    #     'avabot.plugins',
-    # ]
-    # settings.API_TOKEN = config.get('SLACK_API_TOKEN')
-    # settings.config = config
-    # settings.ava_client = ava_client
-    #
-    # bot = Bot()
-    # logging.info('ava-slackbot running. ready to accept messages')
-    # bot.run()
+    config = app_config.load()
+
+    slack = Slack(config.slack, MessageParser())
+    slack.listen(handle_message)
 
 if __name__ == '__main__':
     main()
