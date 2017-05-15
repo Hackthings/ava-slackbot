@@ -53,14 +53,14 @@ class Slack:
         text = message['text']
         channel = message['channel']
         user = message['user']
-        logging.info('received acceptable message from user "%s"' % text)
+        logging.info('received acceptable message "%s" from user "%s"' % (text, user))
 
         try:
             return self.message_parser.run(text, channel, user)
         except AvaSlackbotException as e:
             logging.info('"%s" deemed an invalid message by our message_parser' % text)
             response = self._format_invalid_message(message, str(e))
-            self.client.api_call('chat.postMessage', channel=channel, text=response, as_user=True, parse='full')
+            self.client.api_call('chat.postMessage', channel=channel, text=response, as_user=True, link_names=True)
             return None
 
     def _process_messages(self, messages: List[Dict], handler: MessageHandler) -> None:
