@@ -35,17 +35,6 @@ class Slack:
             return False
         return True
 
-    def _format_invalid_message(self, message: Dict, error_message: str) -> str:
-        return '\n'.join([
-            '<@%s> Bad command, RTFM! `@%s --help` for more details. See usage below:' % (
-                message['user'],
-                self.config.bot_name,
-            ),
-            '```',
-            error_message,
-            '```',
-        ])
-
     def _parse_message(self, message: Dict) -> Optional[ParsedSlackMessage]:
         if not self._should_respond(message):
             return None
@@ -59,7 +48,12 @@ class Slack:
             return self.message_parser.run(text, channel, user)
         except AvaSlackbotException as e:
             logging.info('"%s" deemed an invalid message by our message_parser' % text)
-            self.send_message(self._format_invalid_message(message, str(e)), channel)
+            self.send_formatted_message(
+                'Bad command! `@%s --help` for details. See usage below:' % self.config.bot_name,
+                str(e),
+                channel,
+                user
+            )
             return None
 
     def _process_messages(self, messages: List[Dict], handler: MessageHandler) -> None:
@@ -80,4 +74,29 @@ class Slack:
             raise RuntimeError()
 
     def send_message(self, message: str, channel: str) -> None:
-        self.client.api_call('chat.postMessage', channel=channel, text=message, as_user=True, link_names=True)
+        self.client.api_call(
+            'chat.postMessage',
+            channel=channel,
+            text=message,
+            as_user=True,
+            link_names=True
+        )
+
+    def send_formatted_message(
+        self,
+        header: str,
+        message: str,
+        channel: str,
+        user: str,
+        is_code: bool = True
+    ) -> None:
+        formatted_message = [
+            '<@%s> %s' % (user, header),
+            '```' if is_code else None,
+            message,
+            '```' if is_code else None,
+        ]
+        formatted_message = list(filter(None.__ne__, formatted_message))
+        formatted_message = '\n'.join(formatted_message)
+
+        self.send_message(formatted_message, channel)
