@@ -12,8 +12,9 @@ class AvaApiConfig:
 
 
 class SlackConfig:
-    def __init__(self, bot_id: str, api_token: str, whitelist_channels: str, websocket_delay: int) -> None:
+    def __init__(self, bot_id: str, bot_name: str, api_token: str, whitelist_channels: str, websocket_delay: int) -> None:
         self.bot_id = bot_id
+        self.bot_name = bot_name
         self.api_token = api_token
         self.whitelist_channels = whitelist_channels
         self.websocket_delay = websocket_delay
@@ -35,7 +36,8 @@ def _load_unsafe() -> Dict:
         'SLACK_API_TOKEN': os.environ['SLACK_API_TOKEN'],
         'SLACK_WHITELIST_CHANNELS': os.environ['SLACK_WHITELIST_CHANNELS'],
         'SLACK_WEBSOCKET_DELAY': int(os.environ.get('SLACK_WEBSOCKET_DELAY', 1)),
-        'SLACK_BOT_ID': os.environ.get('SLACK_BOT_ID', 'ava'),
+        'SLACK_BOT_ID': os.environ['SLACK_BOT_ID'],
+        'SLACK_BOT_NAME': os.environ.get('SLACK_BOT_NAME', 'ava'),
     }
 
 
@@ -50,6 +52,7 @@ def load() -> Config:
         ),
         SlackConfig(
             env['SLACK_BOT_ID'],
+            env['SLACK_BOT_NAME'],
             env['SLACK_API_TOKEN'],
             env['SLACK_WHITELIST_CHANNELS'],
             env['SLACK_WEBSOCKET_DELAY']
