@@ -29,7 +29,7 @@ class Slack:
             return False
 
         # Double check the target user is `@our-slackbot`.
-        if not text.strip().startswith('<@%s>' % user):
+        if not text.strip().startswith('<@%s>' % self.config.bot_id):
             return False
 
         # Make sure the message type is a 'message' so we don't blow up downstream.
@@ -61,7 +61,6 @@ class Slack:
                 channel,
                 user
             )
-            return None
 
     def _process_messages(self, messages: List[Dict], handler: MessageHandler) -> None:
         processed_messages = map(self._parse_message, messages)
