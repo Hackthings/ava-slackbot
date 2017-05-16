@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 
+from typing import Dict
+
 from . import Command
 from ..config import Config
 from ..vendor.ava import AvaApi
@@ -14,6 +16,27 @@ class Detect(Command):
         self.slack_client = slack_client
 
         super().__init__(config, **kwargs)
+
+    def _parse_detection_results(self, response: Dict) -> str:
+        detection = response['body']
+        detection_results = [
+            '<@%s> Completed detection: **%s** (*tip:* `--raw-json`):\n' % (
+                self.kwargs['user'], detection['status']['code']
+            )
+        ]
+
+        result = detection['results'][0]  # always 1
+        for obj in result['objects']:
+            detection_result = '\t• `%s`: %s (*model:* %s)' % (
+                obj['class'],
+                obj['confidence'],
+                detection['model']
+            )
+            detection_results.append(detection_result)
+        if len(result['objects']) == 0:
+            detection_results.append('_No objects were found in the target image..._')
+        detection_results.append('\n*Target image*: %s' % result['url'])
+        return '\n'.join(detection_results)
 
     def run(self) -> None:
         response = self.ava_client.detect(
@@ -35,17 +58,5 @@ class Detect(Command):
                 self.kwargs['user']
             )
         else:
-            detection_results = [
-                '<@%s> Successfully processed detection (*tip:* `--raw-json`):\n' % self.kwargs['user']
-            ]
-            result = poll_response['body']['results'][0]
-            for detection in result['objects']:  # always 1
-                detection_result = '\t• `%s`: %s (*model:* %s)' % (
-                    detection['class'],
-                    detection['confidence'],
-                    poll_response['body']['model']
-                )
-                detection_results.append(detection_result)
-            detection_results.append('\n*Target image*: %s' % result['url'])
-            detection_results = '\n'.join(detection_results)
+            detection_results = self._parse_detection_results(poll_response)
             self.slack_client.send_message(detection_results, self.kwargs['channel'])
