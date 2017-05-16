@@ -24,14 +24,22 @@ class Slack:
         type_ = message.get('type')
         text = message.get('text')
 
-        if not message:
-            return False
+        # No 'text' in the event means it's an event we don't care about.
         if not text:
             return False
+
+        # Double check the target user is `@our-slackbot`.
+        if not text.strip().startswith('<@%s>' % user):
+            return False
+
+        # Make sure the message type is a 'message' so we don't blow up downstream.
         if not type_ or type_ != 'message':
             return False
+
+        # Don't reply to ourselves because Ava isn't a crazy bot.
         if not user or user == self.config.bot_id:
             return False
+
         return True
 
     def _parse_message(self, message: Dict) -> Optional[ParsedSlackMessage]:
