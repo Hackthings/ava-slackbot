@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 
+from http import HTTPStatus
 from typing import Dict
 
 from . import Command
@@ -43,11 +44,11 @@ class Detect(Command):
             self.kwargs['<url>'],
             model=self.kwargs['--model']
         )
-        if response['code'] != 200:
+        if response['code'] != HTTPStatus.OK:
             raise DetectionError(response['body'])
 
         poll_response = self.ava_client.poll_until_complete(response['body']['id'])
-        if poll_response['code'] != 200:
+        if poll_response['code'] != HTTPStatus.OK:
             raise DetectionError(poll_response['body'])
 
         if self.kwargs['--raw-json']:

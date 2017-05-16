@@ -4,6 +4,8 @@ import json
 import logging
 import os
 import time
+
+from http import HTTPStatus
 from typing import Optional, Callable, Dict
 
 import requests
@@ -33,7 +35,7 @@ class AvaApiAuth:
         payload = {'clientId': self.client_id, 'clientSecret': self.client_secret}
 
         response = requests.post(auth_endpoint, data=json.dumps(payload))
-        if response.status_code != 200:
+        if response.status_code != HTTPStatus.OK:
             return False
 
         response_payload = response.json()
@@ -98,7 +100,7 @@ class AvaApi:
     def _should_continue_poll(self, response: Dict) -> bool:
         body = response['body']
         status_code = response['code']
-        if status_code != 200:
+        if status_code != HTTPStatus.OK:
             return False
 
         job_status_code = body['results'][0]['status']['code']
