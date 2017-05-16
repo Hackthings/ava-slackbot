@@ -9,7 +9,6 @@ from ..config import SlackConfig
 from ..services.parsers import MessageParser
 from ..domain.exceptions.parse import AvaSlackbotException
 
-
 ParsedSlackMessage = Optional[Dict]
 MessageHandler = Callable[[Dict], None]
 
