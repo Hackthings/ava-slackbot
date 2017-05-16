@@ -20,13 +20,13 @@ class Detect(Command):
     def _parse_detection_results(self, response: Dict) -> str:
         detection = response['body']
         detection_results = [
-            '<@%s> Completed detection: **%s** (*tip:* `--raw-json`):\n' % (
+            '<@%s> Detection: *%s* (*tip:* `--raw-json`):\n' % (
                 self.kwargs['user'], detection['status']['code']
             )
         ]
 
         result = detection['results'][0]  # always 1
-        for obj in result['objects']:
+        for obj in sorted(result['objects'], key=lambda k: k['confidence'], reverse=True):
             detection_result = '\t• `%s`: %s (*model:* %s)' % (
                 obj['class'],
                 obj['confidence'],
