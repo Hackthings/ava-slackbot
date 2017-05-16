@@ -49,7 +49,6 @@ def handle_message(
             arguments['channel'],
             arguments['user']
         )
-    return None
 
 
 def main():
