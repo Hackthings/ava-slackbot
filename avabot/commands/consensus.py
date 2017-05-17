@@ -26,6 +26,7 @@ class Consensus(Command):
             )
         ]
 
+        conf = []
         for response in responses:
             detection = response['body']
             result = detection['results'][0]  # always 1
@@ -56,6 +57,7 @@ class Consensus(Command):
                             detection['status']['code']
                         )
                         detection_results.append(detection_result)
+                        conf.append(obj['confidence'])
                         break
 
             if len(sorted_objs) == 0:
@@ -64,6 +66,8 @@ class Consensus(Command):
                 else:
                     detection_results.append('\t• *model:* %s: no objects found')
 
+        if self.kwargs['--mean']:
+            detection_results.append('\n*Average confidence*: %s' % (sum(conf) / len(conf)))
         detection_results.append('\n*Target image*: %s' % self.kwargs['<url>'])
         return '\n'.join(detection_results)
 

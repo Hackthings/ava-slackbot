@@ -18,7 +18,7 @@ class MessageParser(Parser):
     __doc__ = """Ava Slackbot
 
 Usage:
-    @ava consensus <url> [--raw-json] [--all] [--top=<top>]
+    @ava consensus <url> [--raw-json] [--all] [--top=<top>] [--mean]
     @ava detect <url> [--model=<model>] [--raw-json] [--top=<top>]
     @ava find-person <url> [--model=<model>] [--raw-json]
     @ava search <id>
@@ -39,6 +39,7 @@ Options:
     -v --version     shows version
 
     --all            shows all objects the NN model returned
+    --mean           shows the average confidence of all models (does not work with --all)
     --top=<top>      truncates to the top number of objects returned
     --model=<model>  the NN model to run detections with
     --raw-json       returns the raw JSON response from the Image Intelligence API
