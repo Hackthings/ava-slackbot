@@ -16,7 +16,11 @@ from avabot.vendor.ava import AvaApi
 from avabot.domain import AvaSlackbotException
 
 
-def send_error_message(slack_client, error_message, arguments):
+def send_error_message(
+    slack_client: Slack,
+    error_message: str,
+    arguments: Dict
+) -> None:
     slack_client.send_formatted_message(
         'An error has occurred processing your request...',
         error_message,
@@ -84,6 +88,7 @@ def main():
 
     slack_client = Slack(config.slack, MessageParser())
     slack_client.listen(partial(handle_message, slack_client, ava_client, config))
+
 
 if __name__ == '__main__':
     main()
