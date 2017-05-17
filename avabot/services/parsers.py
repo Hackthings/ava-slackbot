@@ -19,7 +19,7 @@ class MessageParser(Parser):
 
 Usage:
     @ava consensus <url> [--raw-json] [--all] [--top=<top>]
-    @ava detect <url> [--model=<model>] [--raw-json]
+    @ava detect <url> [--model=<model>] [--raw-json] [--top=<top>]
     @ava find-person <url> [--model=<model>] [--raw-json]
     @ava search <id>
     @ava (-h|--help|-v|--version)
@@ -39,7 +39,7 @@ Options:
     -v --version     shows version
 
     --all            shows all objects the NN model returned
-    --top=<top>      truncates to the top number of objects specified
+    --top=<top>      truncates to the top number of objects returned
     --model=<model>  the NN model to run detections with
     --raw-json       returns the raw JSON response from the Image Intelligence API
 
