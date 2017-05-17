@@ -11,6 +11,7 @@ from avabot.vendor.slack import Slack
 from avabot.services.parsers import MessageParser
 
 from avabot.commands.detect import Detect
+from avabot.commands.consensus import Consensus
 from avabot.vendor.ava import AvaApi
 from avabot.domain import AvaSlackbotException
 
@@ -31,6 +32,8 @@ def handle_message(
             )
         elif arguments['detect']:
             Detect(config, ava_client, slack_client, **arguments)
+        elif arguments['consensus']:
+            Consensus(config, ava_client, slack_client, **arguments)
         elif arguments['find-person']:
             slack_client.send_message('`find-person` not yet implemented :cry:', arguments['channel'])
         elif arguments['search']:

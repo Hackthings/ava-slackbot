@@ -18,12 +18,14 @@ class MessageParser(Parser):
     __doc__ = """Ava Slackbot
 
 Usage:
+    @ava consensus <url> [--raw-json] [--all]
     @ava detect <url> [--model=<model>] [--raw-json]
     @ava find-person <url> [--model=<model>] [--raw-json]
     @ava search <id>
     @ava (-h|--help|-v|--version)
 
 Commands:
+    consensus        makes a request against the /v1/detect endpoint over all available models
     detect           makes a request against the /v1/detect endpoint
     find-person      makes a request against the /v1/find-person endpoint
     search           performs a search for the given <custom_id>
