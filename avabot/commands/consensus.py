@@ -21,7 +21,7 @@ class Consensus(Command):
 
     def _parse_detection_results(self, responses: List[Dict]) -> str:
         detection_results = [
-            '<@%s> Detection: (*tip:* `--raw-json`):\n' % (
+            '<@%s> Consensus detections:\n' % (
                 self.kwargs['user']
             )
         ]
