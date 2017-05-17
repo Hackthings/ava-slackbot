@@ -31,8 +31,12 @@ class Consensus(Command):
             result = detection['results'][0]  # always 1
 
             sorted_objs = sorted(result['objects'], key=lambda k: k['confidence'], reverse=True)
+            if self.kwargs['--top']:
+                top_categories = self.kwargs['--top']
+                sorted_objs = sorted_objs[:top_categories]
+
             if self.kwargs['--all']:
-                detection_results.append('\t• *model:* %s: (*status*: %s)' % (
+                detection_results.append('\t• *model:* %s, *status*: %s' % (
                     detection['model'],
                     detection['status']['code']
                 ))

@@ -16,6 +16,15 @@ from avabot.vendor.ava import AvaApi
 from avabot.domain import AvaSlackbotException
 
 
+def send_error_message(slack_client, error_message, arguments):
+    slack_client.send_formatted_message(
+        'An error has occurred processing your request...',
+        error_message,
+        arguments['channel'],
+        arguments['user']
+    )
+
+
 def handle_message(
     slack_client: Slack,
     ava_client: AvaApi,
@@ -23,6 +32,16 @@ def handle_message(
     arguments: Dict
 ) -> None:
     try:
+        # checking for the value of the argument
+        if arguments['--top']:
+            try:
+                arguments['--top'] = int(arguments['--top'])
+            except ValueError:
+                raise ValueError('--top: number of top categories must be a valid integer')
+
+            if arguments['--top'] <= 0:
+                raise ValueError('--top: number of top categories must be greater than 0')
+
         if '--extras' in arguments:
             slack_client.send_formatted_message(
                 'See `--help` usage or `--version` below:',
@@ -46,12 +65,9 @@ def handle_message(
         else:
             error_message = str(e)
 
-        slack_client.send_formatted_message(
-            'An error has occurred processing your request...',
-            error_message,
-            arguments['channel'],
-            arguments['user']
-        )
+        send_error_message(slack_client, error_message, arguments)
+    except ValueError as e:
+        send_error_message(slack_client, str(e), arguments)
 
 
 def main():
