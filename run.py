@@ -29,6 +29,18 @@ def send_error_message(
     )
 
 
+def validate_top_argument(arguments: Dict) -> None:
+    # checking for the value of the argument
+    if arguments['--top']:
+        try:
+            arguments['--top'] = int(arguments['--top'])
+        except (ValueError, TypeError):
+            raise ValueError('--top: number of top categories must be a valid integer')
+
+        if arguments['--top'] <= 0:
+            raise ValueError('--top: number of top categories must be greater than 0')
+
+
 def handle_message(
     slack_client: Slack,
     ava_client: AvaApi,
@@ -36,16 +48,6 @@ def handle_message(
     arguments: Dict
 ) -> None:
     try:
-        # checking for the value of the argument
-        if '--top' in arguments:
-            try:
-                arguments['--top'] = int(arguments['--top'])
-            except ValueError:
-                raise ValueError('--top: number of top categories must be a valid integer')
-
-            if arguments['--top'] <= 0:
-                raise ValueError('--top: number of top categories must be greater than 0')
-
         if '--extras' in arguments:
             slack_client.send_formatted_message(
                 'See `--help` usage or `--version` below:',
@@ -54,8 +56,10 @@ def handle_message(
                 arguments['user']
             )
         elif arguments['detect']:
+            validate_top_argument(arguments)
             Detect(config, ava_client, slack_client, **arguments)
         elif arguments['consensus']:
+            validate_top_argument(arguments)
             Consensus(config, ava_client, slack_client, **arguments)
         elif arguments['find-person']:
             slack_client.send_message('`find-person` not yet implemented :cry:', arguments['channel'])
