@@ -21,7 +21,7 @@ class Detect(Command):
     def _parse_detection_results(self, response: Dict) -> str:
         detection = response['body']
         detection_results = [
-            '<@%s> Detection: *%s* (*tip:* `--raw-json`):\n' % (
+            '<@%s> Detection: *%s*:\n' % (
                 self.kwargs['user'], detection['status']['code']
             )
         ]
