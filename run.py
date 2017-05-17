@@ -37,7 +37,7 @@ def handle_message(
 ) -> None:
     try:
         # checking for the value of the argument
-        if arguments['--top']:
+        if '--top' in arguments:
             try:
                 arguments['--top'] = int(arguments['--top'])
             except ValueError:
