@@ -21,13 +21,16 @@ class Detect(Command):
     def _parse_detection_results(self, response: Dict) -> str:
         detection = response['body']
         detection_results = [
-            '<@%s> Detection: *%s* (*tip:* `--raw-json`):\n' % (
+            '<@%s> Detection: *%s*:\n' % (
                 self.kwargs['user'], detection['status']['code']
             )
         ]
 
         result = detection['results'][0]  # always 1
-        for obj in sorted(result['objects'], key=lambda k: k['confidence'], reverse=True):
+        objects = sorted(result['objects'], key=lambda k: k['confidence'], reverse=True)
+        objects = objects[:self.kwargs.get('--head')]
+
+        for obj in objects:
             detection_result = '\t• `%s`: %s (*model:* %s)' % (
                 obj['class'],
                 obj['confidence'],
