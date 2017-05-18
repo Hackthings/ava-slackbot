@@ -18,8 +18,8 @@ class MessageParser(Parser):
     __doc__ = """Ava Slackbot
 
 Usage:
-    @ava consensus <url> [--raw-json] [--all] [--top=<top>] [--mean]
-    @ava detect <url> [--model=<model>] [--raw-json] [--top=<top>]
+    @ava consensus <url> [--raw-json] [--all] [--head=<n>]
+    @ava detect <url> [--model=<model>] [--raw-json] [--head=<n>]
     @ava find-person <url> [--model=<model>] [--raw-json]
     @ava search <id>
     @ava (-h|--help|-v|--version)
@@ -39,8 +39,7 @@ Options:
     -v --version     shows version
 
     --all            shows all objects the NN model returned
-    --mean           shows the average confidence of all models (does not work with --all)
-    --top=<top>      truncates to the top number of objects returned
+    --head=<n>       truncates to the top number of objects returned
     --model=<model>  the NN model to run detections with
     --raw-json       returns the raw JSON response from the Image Intelligence API
 
@@ -57,12 +56,12 @@ API: https://imageintelligence.com/docs""" % (__author__, __author_email__)
         try:
             arguments = docopt.docopt(MessageParser.__doc__, filtered_message, help=False, version=False)
         except docopt.DocoptExit as e:
-            raise ParseCommandException(e)
+            raise ParseCommandException(str(e))
 
         if any((m in ('-h', '--help')) and m for m in filtered_message):
-            parsed_data = {'--extras': MessageParser.__doc__}
+            parsed_data = {'--extras': MessageParser.__doc__, **arguments}
         elif any((m in ('-v', '--version')) and m for m in filtered_message):
-            parsed_data = {'--extras': 'Ava Slackbot v%s' % __version__}
+            parsed_data = {'--extras': 'Ava Slackbot v%s' % __version__, **arguments}
         else:
             parsed_data = arguments
         return {**slack_data, **parsed_data}

@@ -27,11 +27,10 @@ class Detect(Command):
         ]
 
         result = detection['results'][0]  # always 1
-        sorted_objs = sorted(result['objects'], key=lambda k: k['confidence'], reverse=True)
-        if self.kwargs['--top']:
-            sorted_objs = sorted_objs[:self.kwargs['--top']]
+        objects = sorted(result['objects'], key=lambda k: k['confidence'], reverse=True)
+        objects = objects[:self.kwargs.get('--head')]
 
-        for obj in sorted_objs:
+        for obj in objects:
             detection_result = '\t• `%s`: %s (*model:* %s)' % (
                 obj['class'],
                 obj['confidence'],

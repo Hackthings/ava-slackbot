@@ -5,7 +5,6 @@ from http import HTTPStatus
 from typing import List, Dict
 
 from . import Command
-from .constants import MODEL_LIST
 from ..config import Config
 from ..vendor.ava import AvaApi
 from ..vendor.slack import Slack
@@ -17,6 +16,12 @@ class Consensus(Command):
         self.ava_client = ava_client
         self.slack_client = slack_client
 
+        self.model_list = [
+            'DETECTOR_GEN_01',
+            'CLASSIFIER_GEN_01',
+            'CLASSIFIER_IR_01',
+        ]
+
         super().__init__(config, **kwargs)
 
     def _parse_detection_results(self, responses: List[Dict]) -> str:
@@ -26,29 +31,26 @@ class Consensus(Command):
             )
         ]
 
-        conf = []
         for response in responses:
             detection = response['body']
             result = detection['results'][0]  # always 1
 
-            sorted_objs = sorted(result['objects'], key=lambda k: k['confidence'], reverse=True)
-            if self.kwargs['--top']:
-                top_categories = self.kwargs['--top']
-                sorted_objs = sorted_objs[:top_categories]
+            objects = sorted(result['objects'], key=lambda k: k['confidence'], reverse=True)
+            objects = objects[:self.kwargs.get('--head')]
 
             if self.kwargs['--all']:
                 detection_results.append('\t• *model:* %s, *status*: %s' % (
                     detection['model'],
                     detection['status']['code']
                 ))
-                for obj in sorted_objs:
+                for obj in objects:
                     detection_result = '\t\t◦ `%s`: %s' % (
                         obj['class'],
                         obj['confidence']
                     )
                     detection_results.append(detection_result)
             else:
-                for obj in sorted_objs:
+                for obj in objects:
                     if obj['class'] == 'person':
                         detection_result = '\t• *model:* %s: `%s`, %s (*status*: %s)' % (
                             detection['model'],
@@ -57,23 +59,20 @@ class Consensus(Command):
                             detection['status']['code']
                         )
                         detection_results.append(detection_result)
-                        conf.append(obj['confidence'])
                         break
 
-            if len(sorted_objs) == 0:
+            if len(objects) == 0:
                 if self.kwargs['--all']:
                     detection_results.append('\t\t◦ no objects found')
                 else:
-                    detection_results.append('\t• *model:* %s: no objects found')
+                    detection_results.append('\t• *model:* %s: no objects found' % detection['model'])
 
-        if self.kwargs['--mean']:
-            detection_results.append('\n*Average confidence*: %s' % (sum(conf) / len(conf)))
         detection_results.append('\n*Target image*: %s' % self.kwargs['<url>'])
         return '\n'.join(detection_results)
 
     def run(self) -> None:
         responses = []
-        for model in MODEL_LIST:
+        for model in self.model_list:
             response = self.ava_client.detect(
                 self.kwargs['<url>'],
                 model=model

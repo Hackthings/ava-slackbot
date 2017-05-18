@@ -14,6 +14,7 @@ from avabot.commands.detect import Detect
 from avabot.commands.consensus import Consensus
 from avabot.vendor.ava import AvaApi
 from avabot.domain import AvaSlackbotException
+from avabot.services.validators import docopt_arg_validator
 
 
 def send_error_message(
@@ -29,18 +30,6 @@ def send_error_message(
     )
 
 
-def validate_top_argument(arguments: Dict) -> None:
-    # checking for the value of the argument
-    if arguments['--top']:
-        try:
-            arguments['--top'] = int(arguments['--top'])
-        except (ValueError, TypeError):
-            raise ValueError('--top: number of top categories must be a valid integer')
-
-        if arguments['--top'] <= 0:
-            raise ValueError('--top: number of top categories must be greater than 0')
-
-
 def handle_message(
     slack_client: Slack,
     ava_client: AvaApi,
@@ -48,25 +37,24 @@ def handle_message(
     arguments: Dict
 ) -> None:
     try:
-        if '--extras' in arguments:
+        args = docopt_arg_validator(arguments)
+        if '--extras' in args:
             slack_client.send_formatted_message(
                 'See `--help` usage or `--version` below:',
-                arguments['--extras'],
-                arguments['channel'],
-                arguments['user']
+                args['--extras'],
+                args['channel'],
+                args['user']
             )
-        elif arguments['detect']:
-            validate_top_argument(arguments)
-            Detect(config, ava_client, slack_client, **arguments)
-        elif arguments['consensus']:
-            validate_top_argument(arguments)
-            Consensus(config, ava_client, slack_client, **arguments)
-        elif arguments['find-person']:
-            slack_client.send_message('`find-person` not yet implemented :cry:', arguments['channel'])
-        elif arguments['search']:
-            slack_client.send_message('`search` not yet implemented :cry:', arguments['channel'])
+        elif args['detect']:
+            Detect(config, ava_client, slack_client, **args)
+        elif args['consensus']:
+            Consensus(config, ava_client, slack_client, **args)
+        elif args['find-person']:
+            slack_client.send_message('`find-person` not yet implemented :cry:', args['channel'])
+        elif args['search']:
+            slack_client.send_message('`search` not yet implemented :cry:', args['channel'])
         else:
-            logging.error('unexpected arguments %s' % arguments)
+            logging.error('unexpected args %s' % args)
     except AvaSlackbotException as e:
         if isinstance(e.message, dict):
             error_message = json.dumps(e.message, indent=2, sort_keys=True)
