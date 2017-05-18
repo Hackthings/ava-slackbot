@@ -45,13 +45,13 @@ def handle_message(
                 args['channel'],
                 args['user']
             )
-        elif args['detect']:
+        elif any([args['detect'], args['d']]):
             Detect(config, ava_client, slack_client, **args)
-        elif args['consensus']:
+        elif any([args['consensus'], args['c']]):
             Consensus(config, ava_client, slack_client, **args)
-        elif args['find-person']:
+        elif any([args['find-person'], args['fp']]):
             slack_client.send_message('`find-person` not yet implemented :cry:', args['channel'])
-        elif args['search']:
+        elif any([args['search'], args['s']]):
             slack_client.send_message('`search` not yet implemented :cry:', args['channel'])
         else:
             logging.error('unexpected args %s' % args)
