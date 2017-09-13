@@ -43,12 +43,14 @@ class Slack:
         return True
 
     def _parse_message(self, message: Dict) -> Optional[ParsedSlackMessage]:
+        text = message.get('text')
+        channel = message.get('channel')
+        user = message.get('user')
+
         if not self._should_respond(message):
+            logging.info('denied message "%s" from user "%s' % (text, user))
             return None
 
-        text = message['text']
-        channel = message['channel']
-        user = message['user']
         logging.info('received acceptable message "%s" from user "%s"' % (text, user))
 
         try:
