@@ -81,6 +81,11 @@ class AvaApi:
         response = method(endpoint, data=json.dumps(payload), headers=headers)
         logging.info('received response code: %s (%s)' % (response.status_code, endpoint))
 
+        if response.status_code >= 500:
+            return {
+                'body': {'error': response.text},
+                'code': response.status_code,
+            }
         return {
             'body': response.json(),
             'code': response.status_code,
