@@ -91,8 +91,13 @@ class AvaApi:
             'code': response.status_code,
         }
 
-    def detect(self, url: str, model: Optional[str] = None) -> Dict:
-        payload = {'items': [{'url': url}], 'model': model}
+    def detect(self, url: str, model: Optional[str] = None, version: Optional[str] = None) -> Dict:
+        payload = {'items': [{'url': url}]}
+        if model is not None:
+            payload['model'] = model
+        if model and version:
+            payload['model'] = {'name': model, 'version': version}
+
         endpoint = os.path.join(self.endpoint, self.version, 'detect')
         headers = {'Content-Type': 'application/json'}
 

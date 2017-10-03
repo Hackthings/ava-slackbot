@@ -19,29 +19,31 @@ class MessageParser(Parser):
 
 Usage:
     @ava (c|consensus) <url> [--raw-json] [--all] [--head=<n>]
-    @ava (d|detect) <url> [--model=<model>] [--raw-json] [--head=<n>]
+    @ava (d|detect) <url> [--model=<model> --mversion=<version>] [--raw-json] [--head=<n>]
     @ava (fp|find-person) <url> [--model=<model>] [--raw-json]
     @ava (s|search) <id>
     @ava (-h|--help|-v|--version)
 
 Commands:
-    (c|consensus)     makes a request against the /v1/detect endpoint over all available models
-    (d|detect)        makes a request against the /v1/detect endpoint
-    (fp|find-person)  makes a request against the /v1/find-person endpoint
-    (s|search)        performs a search for the given <custom_id>
+    (c|consensus)         request against /v1/detect over all available models (except beta)
+    (d|detect)            request against /v1/detect
+    (fp|find-person)      request against /v1/find-person
+    (s|search)            performs a search for the given <custom_id>
 
 Arguments:
-    <url>             image url you want to run detections on
-    <id>              a job id or custom id to search against
+    <url>                 image url you want to run detections on
+    <id>                  a job id or custom id to search against
 
 Options:
-    -h --help         shows this
-    -v --version      shows version
+    -h --help             shows this
+    -v --version          shows version
 
-    --all             shows all objects the NN model returned
-    --head=<n>        truncates to the top number of objects returned
-    --model=<model>   the NN model to run detections with
-    --raw-json        returns the raw JSON response from the Image Intelligence API
+    -a --all              shows all objects the NN model returned
+    --head=<n>            truncates to the top number of objects returned
+    --model=<model>       the NN model to run detections with
+    --mversion<=version>  the version uuid for the given --model
+
+    -raw-json             returns the raw JSON response from the Image Intelligence API
 
 Author: %s <%s>, Image Intelligence
 GitHub: https://github.com/ImageIntelligence/ava-slackbot

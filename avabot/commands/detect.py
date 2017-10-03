@@ -45,7 +45,8 @@ class Detect(Command):
     def run(self) -> None:
         response = self.ava_client.detect(
             self.kwargs['<url>'],
-            model=self.kwargs['--model']
+            model=self.kwargs['--model'],
+            version=self.kwargs['--mversion'],
         )
         if response['code'] != HTTPStatus.OK:
             raise DetectionError(response['body'])
