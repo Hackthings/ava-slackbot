@@ -3,10 +3,9 @@
 import logging
 import json
 
-from typing import Dict
 from functools import partial
 
-from avabot.config import Config, load as load_config
+from avabot.config import load as load_config
 from avabot.vendor.slack import Slack
 from avabot.services.parsers import MessageParser
 
@@ -17,11 +16,7 @@ from avabot.domain import AvaSlackbotException
 from avabot.services.validators import docopt_arg_validator
 
 
-def send_error_message(
-    slack_client: Slack,
-    error_message: str,
-    arguments: Dict
-) -> None:
+def send_error_message(slack_client, error_message, arguments):
     slack_client.send_formatted_message(
         'An error has occurred processing your request...',
         error_message,
@@ -30,12 +25,7 @@ def send_error_message(
     )
 
 
-def handle_message(
-    slack_client: Slack,
-    ava_client: AvaApi,
-    config: Config,
-    arguments: Dict
-) -> None:
+def handle_message(slack_client, ava_client, config, arguments):
     try:
         args = docopt_arg_validator(arguments)
         if '--extras' in args:

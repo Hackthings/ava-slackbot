@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import shlex
-from typing import Dict
-
 import docopt
 
 from ..domain.exceptions.parse import ParseCommandException
@@ -10,7 +8,7 @@ from .. import __version__
 
 
 class Parser:
-    def run(self, message: str, channel: str, user: str) -> None:
+    def run(self, message, channel, user):
         raise NotImplementedError
 
 
@@ -49,7 +47,7 @@ Author: %s <%s>, Image Intelligence
 GitHub: https://github.com/ImageIntelligence/ava-slackbot
 API: https://imageintelligence.com/docs""" % (__author__, __author_email__)
 
-    def run(self, message: str, channel: str, user: str) -> Dict:
+    def run(self, message, channel, user):
         filtered_message = shlex.split(message)[1:]
         filtered_message = map(lambda i: i.strip('<>'), filtered_message)
         filtered_message = list(filtered_message)

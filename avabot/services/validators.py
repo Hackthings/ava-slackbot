@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 from copy import deepcopy
-from typing import Dict
 
 
-def docopt_arg_validator(arguments: Dict) -> Dict:
+def docopt_arg_validator(arguments):
     args = deepcopy(arguments)
 
     if args['--head']:

@@ -6,8 +6,6 @@ import os
 import time
 
 from http import HTTPStatus
-from typing import Optional, Callable, Dict
-
 import requests
 
 from ..domain.exceptions.ava import AvaInvalidTokenException
@@ -16,21 +14,21 @@ from ..domain.exceptions.ava import AvaInvalidTokenException
 class AvaApiAuth:
     AUTH_TOKEN_REFRESH_THRESHOLD = 1000 * 30  # 0.5 minutes in milliseconds
 
-    def __init__(self, client_id: str, client_secret: str, endpoint: str, version: str) -> None:
+    def __init__(self, client_id, client_secret, endpoint, version):
         self.client_id = client_id
         self.client_secret = client_secret
         self.endpoint = endpoint
         self.version = version
         self._auth = {}
 
-    def is_expired(self) -> bool:
+    def is_expired(self):
         if not self._auth:
             return True
 
         now = int(datetime.datetime.now().strftime('%s')) * 1000
         return now >= (self._auth['expires_at'] - self.__class__.AUTH_TOKEN_REFRESH_THRESHOLD)
 
-    def request_new_token(self) -> bool:
+    def request_new_token(self):
         auth_endpoint = os.path.join(self.endpoint, self.version, 'oauth/token')
         payload = {'clientId': self.client_id, 'clientSecret': self.client_secret}
 
@@ -47,7 +45,7 @@ class AvaApiAuth:
         return True
 
     @property
-    def token(self) -> str:
+    def token(self):
         if self.is_expired():
             self.request_new_token()
         return self._auth['token']
@@ -57,19 +55,13 @@ class AvaApi:
     ERROR_STATUSES = ['PARTIAL_ERROR', 'ERROR']
     IN_PROGRESS_STATUS = 'IN_PROGRESS'
 
-    def __init__(self, client_id: str, client_secret: str, endpoint: str, version: str):
+    def __init__(self, client_id, client_secret, endpoint, version):
         self.auth = AvaApiAuth(client_id, client_secret, endpoint, version)
 
         self.endpoint = endpoint
         self.version = version
 
-    def _api_request(
-        self,
-        method: Callable,
-        endpoint: str,
-        payload: Optional[Dict] = None,
-        headers: Optional[Dict] = None
-    ) -> Dict:
+    def _api_request(self, method, endpoint, payload=None, headers=None):
         payload = payload or {}
         headers = headers or {}
 
@@ -91,7 +83,7 @@ class AvaApi:
             'code': response.status_code,
         }
 
-    def detect(self, url: str, model: Optional[str] = None, version: Optional[str] = None) -> Dict:
+    def detect(self, url, model=None, version=None):
         payload = {'items': [{'url': url}]}
         if model is not None:
             payload['model'] = model
@@ -103,11 +95,11 @@ class AvaApi:
 
         return self._api_request(requests.post, endpoint, payload, headers)
 
-    def get_image_result(self, job_id: str) -> Dict:
+    def get_image_result(self, job_id):
         endpoint = os.path.join(self.endpoint, self.version, 'detect', job_id)
         return self._api_request(requests.get, endpoint)
 
-    def _should_continue_poll(self, response: Dict) -> bool:
+    def _should_continue_poll(self, response):
         body = response['body']
         status_code = response['code']
         if status_code != HTTPStatus.OK:
@@ -116,7 +108,7 @@ class AvaApi:
         job_status_code = body['results'][0]['status']['code']
         return job_status_code == self.__class__.IN_PROGRESS_STATUS
 
-    def poll_until_complete(self, job_id: str) -> Dict:
+    def poll_until_complete(self, job_id):
         response = self.get_image_result(job_id)
 
         while self._should_continue_poll(response):

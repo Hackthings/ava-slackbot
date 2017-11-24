@@ -1,18 +1,13 @@
 # -*- coding: utf-8 -*-
 import json
-
 from http import HTTPStatus
-from typing import List, Dict
 
 from . import Command
-from ..config import Config
-from ..vendor.ava import AvaApi
-from ..vendor.slack import Slack
 from ..domain.exceptions.command import DetectionError
 
 
 class Consensus(Command):
-    def __init__(self, config: Config, ava_client: AvaApi, slack_client: Slack, **kwargs) -> None:
+    def __init__(self, config, ava_client, slack_client, **kwargs):
         self.ava_client = ava_client
         self.slack_client = slack_client
 
@@ -24,7 +19,7 @@ class Consensus(Command):
 
         super().__init__(config, **kwargs)
 
-    def _parse_detection_results(self, responses: List[Dict]) -> str:
+    def _parse_detection_results(self, responses):
         detection_results = [
             '<@%s> Consensus detections:\n' % (
                 self.kwargs['user']
@@ -70,7 +65,7 @@ class Consensus(Command):
         detection_results.append('\n*Target image*: %s' % self.kwargs['<url>'])
         return '\n'.join(detection_results)
 
-    def run(self) -> None:
+    def run(self):
         responses = []
         for model in self.model_list:
             response = self.ava_client.detect(

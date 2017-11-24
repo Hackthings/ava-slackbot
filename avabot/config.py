@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 import os
-from typing import Dict
 
 
 class AvaApiConfig:
-    def __init__(self, endpoint: str, version: str, client_id: str, client_secret: str) -> None:
+    def __init__(self, endpoint, version, client_id, client_secret):
         self.endpoint = endpoint
         self.version = version
         self.client_id = client_id
@@ -12,14 +11,7 @@ class AvaApiConfig:
 
 
 class SlackConfig:
-    def __init__(
-            self,
-            bot_id: str,
-            bot_name: str,
-            api_token: str,
-            whitelist_channels: str,
-            websocket_delay: float
-    ) -> None:
+    def __init__(self, bot_id, bot_name, api_token, whitelist_channels, websocket_delay):
         self.bot_id = bot_id
         self.bot_name = bot_name
         self.api_token = api_token
@@ -28,12 +20,12 @@ class SlackConfig:
 
 
 class Config:
-    def __init__(self, ava: AvaApiConfig, slack: SlackConfig) -> None:
+    def __init__(self, ava, slack):
         self.ava = ava
         self.slack = slack
 
 
-def _load_unsafe() -> Dict:
+def _load_unsafe():
     return {
         'AVA_API_ENDPOINT': os.environ['AVA_API_ENDPOINT'],
         'AVA_API_VERSION': os.environ['AVA_API_VERSION'],
@@ -48,7 +40,7 @@ def _load_unsafe() -> Dict:
     }
 
 
-def load() -> Config:
+def load():
     env = _load_unsafe()
     return Config(
         AvaApiConfig(
