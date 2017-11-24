@@ -41,6 +41,11 @@ This project is our in-house Slackbot, allowing us to interact with the Image In
 1. Start the container:
 
     ```bash
+    docker-compose --rm ava-slackbot sh
+    python run.py
+
+    # or
+
     docker-compose up
     ```
 
