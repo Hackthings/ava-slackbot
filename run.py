@@ -12,7 +12,7 @@ from avabot.services.parsers import MessageParser
 from avabot.commands.detect import Detect
 from avabot.commands.consensus import Consensus
 from avabot.vendor.ava import AvaApi
-from avabot.domain import AvaSlackbotException
+from avabot.domain.exceptions import AvaSlackbotException
 from avabot.services.validators import docopt_arg_validator
 
 

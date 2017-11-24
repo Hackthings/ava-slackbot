@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 __version_info__ = (0, 1, 0)
 __version__ = '.'.join(map(lambda i: str(i), __version_info__))
 

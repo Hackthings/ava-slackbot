@@ -2,8 +2,8 @@
 import json
 from http import HTTPStatus
 
-from . import Command
-from ..domain.exceptions.command import DetectionError
+from avabot.commands import Command
+from avabot.domain.exceptions.command import DetectionError
 
 
 class Consensus(Command):

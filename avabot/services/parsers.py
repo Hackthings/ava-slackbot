@@ -2,9 +2,9 @@
 import shlex
 import docopt
 
-from ..domain.exceptions.parse import ParseCommandException
-from .. import __author__, __author_email__
-from .. import __version__
+from avabot.domain.exceptions.parse import ParseCommandException
+from avabot import __author__, __author_email__
+from avabot import __version__
 
 
 class Parser:

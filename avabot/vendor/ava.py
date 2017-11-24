@@ -8,7 +8,7 @@ import time
 from http import HTTPStatus
 import requests
 
-from ..domain.exceptions.ava import AvaInvalidTokenException
+from avabot.domain.exceptions.ava import AvaInvalidTokenException
 
 
 class AvaApiAuth:
