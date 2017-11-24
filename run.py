@@ -58,7 +58,6 @@ def handle_message(slack_client, ava_client, config, arguments):
 
 def main():
     logging.basicConfig(level=logging.INFO)
-    logging.info('init ava-slackbot!')
 
     config = load_config()
     ava_client = AvaApi(

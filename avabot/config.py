@@ -33,7 +33,7 @@ def _load_unsafe():
         'AVA_CLIENT_SECRET': os.environ['AVA_CLIENT_SECRET'],
 
         'SLACK_API_TOKEN': os.environ['SLACK_API_TOKEN'],
-        'SLACK_WHITELIST_CHANNELS': os.environ['SLACK_WHITELIST_CHANNELS'],
+        'SLACK_WHITELIST_CHANNELS': os.environ.get('SLACK_WHITELIST_CHANNELS', '').split(','),
         'SLACK_WEBSOCKET_DELAY': float(os.environ.get('SLACK_WEBSOCKET_DELAY', 1)),
         'SLACK_BOT_ID': os.environ['SLACK_BOT_ID'],
         'SLACK_BOT_NAME': os.environ.get('SLACK_BOT_NAME', 'ava'),

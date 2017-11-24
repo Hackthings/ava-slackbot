@@ -3,8 +3,6 @@ import logging
 import time
 
 from slackclient import SlackClient
-
-from ..config import SlackConfig
 from ..domain.exceptions.parse import AvaSlackbotException
 
 
@@ -14,10 +12,10 @@ class Slack:
         self.client = SlackClient(config.api_token)
         self.message_parser = message_parser
 
-    def _should_respond(self, message):
-        user = message.get('user')
-        type_ = message.get('type')
-        text = message.get('text')
+    def _should_respond(self, type_, text, channel, user):
+        # Only allow messages to pass through if the channel is whitelisted.
+        if channel not in self.config.whitelist_channels:
+            return False
 
         # No 'text' in the event means it's an event we don't care about.
         if not text:
@@ -28,26 +26,26 @@ class Slack:
             return False
 
         # Make sure the message type is a 'message' so we don't blow up downstream.
-        if not type_ or type_ != 'message':
+        if type_ != 'message':
             return False
 
-        # Don't reply to ourselves because Ava isn't a crazy bot.
-        if not user or user == self.config.bot_id:
+        # Slack-bot shouldn't reply to itself.
+        if user == self.config.bot_id:
             return False
 
         return True
 
     def _parse_message(self, message):
+        user = message.get('user')
+        type_ = message.get('type')
         text = message.get('text')
         channel = message.get('channel')
-        user = message.get('user')
 
-        if not self._should_respond(message):
-            logging.info('denied message "%s" from user "%s' % (text, user))
+        if not self._should_respond(type_, text, channel, user):
+            logging.debug('denied message from user - message=%s - user=%s' % (text, user))
             return None
 
-        logging.info('received acceptable message "%s" from user "%s"' % (text, user))
-
+        logging.info('received acceptable message from user - message=%s - user=%s' % (text, user))
         try:
             return self.message_parser.run(text, channel, user)
         except AvaSlackbotException as e:
@@ -58,6 +56,7 @@ class Slack:
                 channel,
                 user
             )
+        return None
 
     def _process_messages(self, messages, handler):
         processed_messages = map(self._parse_message, messages)
@@ -77,13 +76,7 @@ class Slack:
             raise RuntimeError()
 
     def send_message(self, message, channel):
-        self.client.api_call(
-            'chat.postMessage',
-            channel=channel,
-            text=message,
-            as_user=True,
-            link_names=True
-        )
+        self.client.api_call('chat.postMessage', channel=channel, text=message, as_user=True, link_names=True)
 
     def send_formatted_message(self, header, message, channel, user, is_code=True):
         formatted_message = [
