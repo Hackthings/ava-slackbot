@@ -13,6 +13,7 @@ class Slack:
         self.message_parser = message_parser
 
     def _should_respond(self, type_, text, channel, user):
+        """Determines whether or not the Slackbot should process and reply to the message."""
         # Only allow messages to pass through if the channel is whitelisted.
         if channel not in self.config.whitelist_channels:
             return False
@@ -49,7 +50,7 @@ class Slack:
         try:
             return self.message_parser.run(text, channel, user)
         except AvaSlackbotException as e:
-            logging.info('"%s" deemed an invalid message by our message_parser' % text)
+            logging.info('"%s" is an invalid message to process' % text)
             self.send_formatted_message(
                 'Bad command! `@%s --help` for details. See usage below:' % self.config.bot_name,
                 str(e),
@@ -58,18 +59,15 @@ class Slack:
             )
         return None
 
-    def _process_messages(self, messages, handler):
-        processed_messages = map(self._parse_message, messages)
-        processed_messages = filter(None.__ne__, processed_messages)
-        processed_messages = map(handler, processed_messages)
-        list(processed_messages)
-
     def listen(self, handler):
+        """Starts listening for user input via `self.client`."""
         if self.client.rtm_connect():
             logging.info('connected to slack, ready to accept messages')
             while True:
-                slack_messages = self.client.rtm_read()
-                self._process_messages(slack_messages, handler)
+                processed_messages = map(self._parse_message, self.client.rtm_read())
+                processed_messages = filter(None.__ne__, processed_messages)
+                processed_messages = map(handler, processed_messages)
+                list(processed_messages)
                 time.sleep(self.config.websocket_delay)
         else:
             logging.error('failed to connect to slack, perhaps invalid token')
