@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 import json
-
 from http import HTTPStatus
 
 from avabot.commands import Command
-from avabot.domain.exceptions.command import DetectionError
+from avabot.exceptions.command import DetectionError
 
 
 class Detect(Command):
@@ -24,7 +23,6 @@ class Detect(Command):
 
         result = detection['results'][0]  # always 1
         objects = sorted(result['objects'], key=lambda k: k['confidence'], reverse=True)
-        objects = objects[:self.kwargs.get('--head')]
 
         for obj in objects:
             detection_result = '\t• `%s`: %s (*model:* %s)' % (
