@@ -1,19 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import logging
 import json
-
+import logging
 from functools import partial
 
-from avabot.config import load as load_config
-from avabot.vendor.slack import Slack
-from avabot.services.parsers import MessageParser
-
-from avabot.commands.detect import Detect
 from avabot.commands.consensus import Consensus
-from avabot.vendor.ava import AvaApi
-from avabot.domain.exceptions import AvaSlackbotException
+from avabot.commands.detect import Detect
+from avabot.config import load as load_config
+from avabot.exceptions import AvaSlackbotException
+from avabot.services.parsers import MessageParser
 from avabot.services.validators import docopt_arg_validator
+from avabot.vendor.ava import AvaApi
+from avabot.vendor.slack import Slack
 
 
 def send_error_message(slack_client, error_message, arguments):
@@ -37,12 +35,6 @@ def handle_message(slack_client, ava_client, config, arguments):
             )
         elif any([args['detect'], args['d']]):
             Detect(config, ava_client, slack_client, **args)
-        elif any([args['consensus'], args['c']]):
-            Consensus(config, ava_client, slack_client, **args)
-        elif any([args['find-person'], args['fp']]):
-            slack_client.send_message('`find-person` not yet implemented :cry:', args['channel'])
-        elif any([args['search'], args['s']]):
-            slack_client.send_message('`search` not yet implemented :cry:', args['channel'])
         else:
             logging.error('unexpected args %s' % args)
     except AvaSlackbotException as e:
