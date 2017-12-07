@@ -3,7 +3,8 @@ import logging
 import time
 
 from slackclient import SlackClient
-from avabot.domain.exceptions.parse import AvaSlackbotException
+
+from avabot.exceptions.parse import AvaSlackbotException
 
 
 class Slack:
