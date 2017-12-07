@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from avabot.domain.exceptions import AvaSlackbotException
+from avabot.exceptions import AvaSlackbotException
 
 
 class ParseCommandException(AvaSlackbotException):
