@@ -4,3 +4,4 @@ __pycache__
 .cache
 
 local.env.list
+test.env.list
