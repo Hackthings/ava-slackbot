@@ -14,21 +14,6 @@ This project is our in-house Slackbot, allowing us to interact with the Image In
     git clone git@github.com:ImageIntelligence/ava-slackbot.git
     ```
 
-1. Specify the required environment variables:
-
-    Create a file at the root of this project called `local.env.list` with the following contents
-
-    ```bash
-    AVA_API_ENDPOINT=https://api.imageintelligence.com
-    AVA_API_VERSION=v1
-    AVA_CLIENT_ID=
-    AVA_CLIENT_SECRET=
-    SLACK_API_TOKEN=
-    SLACK_WHITELIST_CHANNELS=
-    ```
-
-    See the Image Intelligence [docs](https://imageintelligence.com/docs) for `AVA_CLIENT_ID` and `AVA_CLIENT_SECRET`.
-
 1. Install docker and docker-compose:
 
     ```bash
@@ -38,15 +23,13 @@ This project is our in-house Slackbot, allowing us to interact with the Image In
     brew cask install docker-toolbox
     ```
 
+1. Obtain `*.env.list` files from another developer.
+
 1. Start the container:
 
     ```bash
-    docker-compose --rm ava-slackbot sh
+    docker-compose run --rm ava-slackbot sh
     python run.py
-
-    # or
-
-    docker-compose up
     ```
 
 ## Development
@@ -67,6 +50,15 @@ This project is our in-house Slackbot, allowing us to interact with the Image In
 
 1. PEP8 your Python code:
 
-    ```
+    ```bash
     pep8 ./ --ignore=E501,E701
     ```
+
+## Testing
+
+Tests are written using `pytest`. To run the test suite:
+
+```bash
+docker-compose run --rm ava-slackbot-test sh
+python -m pytest avabot/tests
+```
