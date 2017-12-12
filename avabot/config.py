@@ -2,7 +2,7 @@
 import os
 
 
-class AvaApiConfig:
+class ImageIntelligenceApiConfig:
     def __init__(self, endpoint, client_id, client_secret):
         self.endpoint = endpoint
         self.client_id = client_id
@@ -19,16 +19,16 @@ class SlackConfig:
 
 
 class Config:
-    def __init__(self, ava, slack):
-        self.ava = ava
+    def __init__(self, ii, slack):
+        self.ii = ii
         self.slack = slack
 
 
 def _load_unsafe():
     return {
-        'II_ENDPOINT': os.environ['AVA_API_ENDPOINT'],
-        'II_CLIENT_ID': os.environ['AVA_CLIENT_ID'],
-        'II_CLIENT_SECRET': os.environ['AVA_CLIENT_SECRET'],
+        'II_API_ENDPOINT': os.environ['II_API_ENDPOINT'],
+        'II_CLIENT_ID': os.environ['II_CLIENT_ID'],
+        'II_CLIENT_SECRET': os.environ['II_CLIENT_SECRET'],
 
         'SLACK_API_TOKEN': os.environ['SLACK_API_TOKEN'],
         'SLACK_WHITELIST_CHANNELS': os.environ.get('SLACK_WHITELIST_CHANNELS', '').split(','),
@@ -41,7 +41,7 @@ def _load_unsafe():
 def load():
     env = _load_unsafe()
     return Config(
-        AvaApiConfig(
+        ImageIntelligenceApiConfig(
             env['II_API_ENDPOINT'],
             env['II_CLIENT_ID'],
             env['II_CLIENT_SECRET']
