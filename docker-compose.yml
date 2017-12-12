@@ -3,6 +3,14 @@ services:
   ava-slackbot:
     container_name: ava-slackbot
     build: .
+    image: ava-slackbot
     env_file: ./local.env.list
+    volumes:
+      - ./:/root/app
+  ava-slackbot-test:
+    container_name: ava-slackbot-test
+    build: .
+    image: ava-slackbot
+    env_file: ./test.env.list
     volumes:
       - ./:/root/app
