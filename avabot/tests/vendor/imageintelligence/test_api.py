@@ -93,7 +93,7 @@ class TestImageIntelligenceApiFindObject:
                 {'class': 'person', 'hitl': 'XXX'},
             ])
 
-    def test_allow_multiple_classes_with_different_hitl(self):
+    def test_allows_multiple_classes_with_different_hitl(self):
         api = ImageIntelligenceApi(self.client_id, self.client_secret, self.base_endpoint, self.token)
         response = api.find_object([
             {'url': 'https://www.placecage.com/c/200/300'},
@@ -102,6 +102,21 @@ class TestImageIntelligenceApiFindObject:
             {'class': 'person', 'hitl': 'NEVER'},
         ])
         # TODO: Handle this properly.
+
+    def test_allows_explicit_model_ids_to_be_specified(self):
+        api = ImageIntelligenceApi(self.client_id, self.client_secret, self.base_endpoint, self.token)
+        response = api.find_object([
+            {'url': 'https://www.placecage.com/c/200/300'},
+        ], [
+            {'class': 'person', 'hitl': 'NEVER', 'model': '817453cc-3ead-46df-8db2-dff517c01fba'},
+        ])
+        assert response['status'] == 'IN_PROGRESS'
+
+    def test_not_allows_model_ids_not_belonging_to_the_class(self):
+        pass
+
+    def test_not_allow_invalid_model_ids(self):
+        pass
 
     def test_does_not_allow_empty_classes(self):
         api = ImageIntelligenceApi(self.client_id, self.client_secret, self.base_endpoint, self.token)
