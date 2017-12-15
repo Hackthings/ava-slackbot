@@ -79,7 +79,7 @@ class Slack:
 
     def send_formatted_message(self, header, message, channel, user, is_code=True):
         formatted_message = [
-            '<@%s> %s' % (user, header),
+            '<@%s> %s' % (user, header) if header else None,
             '```' if is_code else None,
             message,
             '```' if is_code else None,
