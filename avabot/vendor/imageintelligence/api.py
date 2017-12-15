@@ -95,7 +95,7 @@ class ImageIntelligenceApi:
             )
             if response['status'] != 'IN_PROGRESS':
                 return response
-        raise ApiRequestTimeoutError('(%s) %s' % (response.status_code, response.text))
+        raise ApiRequestTimeoutError('polling for job results took too long - jobId=%s' % response['id'])
 
     def poll_for_target_result(self, job_id, attempts=MAX_POLL_ATTEMPTS):
         return self.poll_for_job_result('/find-target', job_id, attempts)
