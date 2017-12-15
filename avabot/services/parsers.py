@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import shlex
-
 import docopt
 
 from avabot import __author__, __author_email__
 from avabot import __version__
 from avabot.exceptions.parse import ParseCommandException
+from avabot.constants import DEFAULT_CLASS, DEFAULT_HITL
 
 
 class Parser:
@@ -17,26 +17,32 @@ class MessageParser(Parser):
     __doc__ = """Ava Slackbot
 
 Usage:
-    @ava (d|detect) <url> [--raw-json]
+    @ava (fo|find-object) <url> [<class> [<model_id>]] [--hitl=<hitl>] [--raw-json]
     @ava (-h|--help|-v|--version)
 
 Commands:
-    (d|detect)    request against /v1/detect
+    (fo|find-object)  request against /v2/find-object
 
 Arguments:
-    <url>         image url you want to run detections on
-    <id>          a job id or custom id to search against
+    <url>             image url you want to run detections on
+    <model_id>        the model id you want to perform classification against
+    <class>           the class you want to find in the url [default: %s]
 
 Options:
-    -h --help     shows this
-    -v --version  shows version
+    -h --help         shows this
+    -v --version      shows version
 
-    -a --all      shows all objects the NN model returned
-    -raw-json     returns the raw JSON response from the Image Intelligence API
+    --raw-json        returns the raw JSON response from the Image Intelligence API
+    --hitl=<hitl>     additional verification (AUTO, ALWAYS, NEVER) [default: %s]
 
 Author: %s <%s>, Image Intelligence
 GitHub: https://github.com/ImageIntelligence/ava-slackbot
-API: https://imageintelligence.com/docs""" % (__author__, __author_email__)
+API: https://docs.imageintelligence.com""" % (
+        DEFAULT_CLASS,
+        DEFAULT_HITL,
+        __author__,
+        __author_email__
+    )
 
     def run(self, message, channel, user):
         filtered_message = shlex.split(message)[1:]

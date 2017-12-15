@@ -4,14 +4,12 @@ import json
 import logging
 from functools import partial
 
-from avabot.commands.consensus import Consensus
-from avabot.commands.detect import Detect
+from avabot.commands.find_object import FindObject
 from avabot.config import load as load_config
 from avabot.exceptions import AvaSlackbotException
 from avabot.services.parsers import MessageParser
-from avabot.services.validators import docopt_arg_validator
-from avabot.vendor.ava import AvaApi
 from avabot.vendor.slack import Slack
+from avabot.vendor.imageintelligence.api import ImageIntelligenceApi
 
 
 def send_error_message(slack_client, error_message, arguments):
@@ -23,9 +21,8 @@ def send_error_message(slack_client, error_message, arguments):
     )
 
 
-def handle_message(slack_client, ava_client, config, arguments):
+def handle_message(slack_client, ii_client, config, args):
     try:
-        args = docopt_arg_validator(arguments)
         if '--extras' in args:
             slack_client.send_formatted_message(
                 'See `--help` usage or `--version` below:',
@@ -33,8 +30,8 @@ def handle_message(slack_client, ava_client, config, arguments):
                 args['channel'],
                 args['user']
             )
-        elif any([args['detect'], args['d']]):
-            Detect(config, ava_client, slack_client, **args)
+        elif any([args['fo'], args['find-object']]):
+            FindObject(config, ii_client, slack_client, **args)
         else:
             logging.error('unexpected args %s' % args)
     except AvaSlackbotException as e:
@@ -43,24 +40,23 @@ def handle_message(slack_client, ava_client, config, arguments):
         else:
             error_message = str(e)
 
-        send_error_message(slack_client, error_message, arguments)
+        send_error_message(slack_client, error_message, args)
     except ValueError as e:
-        send_error_message(slack_client, str(e), arguments)
+        send_error_message(slack_client, str(e), args)
 
 
 def main():
     logging.basicConfig(level=logging.INFO)
 
     config = load_config()
-    ava_client = AvaApi(
-        config.ava.client_id,
-        config.ava.client_secret,
-        config.ava.endpoint,
-        config.ava.version
+    ii_client = ImageIntelligenceApi(
+        config.ii.client_id,
+        config.ii.client_secret,
+        config.ii.endpoint,
     )
 
     slack_client = Slack(config.slack, MessageParser())
-    slack_client.listen(partial(handle_message, slack_client, ava_client, config))
+    slack_client.listen(partial(handle_message, slack_client, ii_client, config))
 
 
 if __name__ == '__main__':
