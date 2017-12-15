@@ -3,8 +3,8 @@
 
 class Command:
     def __init__(self, config, **kwargs):
-        self.kwargs = kwargs
         self.config = config
+        self.kwargs = kwargs
 
         self.run()
 
