@@ -18,10 +18,12 @@ class MessageParser(Parser):
 
 Usage:
     @ava (fo|find-object) <url> [<class> [<model_id>]] [--hitl=<hitl>] [--raw-json]
+    @ava (foc|find-object-consensus) <url> [<class>] [--raw-json]
     @ava (-h|--help|-v|--version)
 
 Commands:
-    (fo|find-object)  request against /v2/find-object
+    (fo|find-object)             request against /find-object
+    (foc|find-object-consensus)  multiple requests for multiple modules against /find-object
 
 Arguments:
     <url>             image url you want to run detections on
