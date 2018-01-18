@@ -19,7 +19,6 @@ class MessageParser(Parser):
 Usage:
     @ava (fo|find-object) <urls>... [-pc] [--class=<class>] [--model=<model_id>] [--hitl=<hitl>] [-r|--raw-json]
     @ava (foc|find-object-consensus) <urls>... [-pc] [--class=<class>] [--raw-json]
-
     @ava (-h|--help|-v|--version)
 
 Commands:
@@ -29,15 +28,14 @@ Commands:
 Arguments:
     <urls>...         image urls you want to run detections on
     <model_id>        the model id you want to perform classification against
-    <class>           the class you want to find in the url [default: %s]
 
 Options:
     -h --help         shows this
     -v --version      shows version
 
-    -p                person class
+    -p                person class (default)
     -c                car class
-    --class           specify the class you want to find in the url [default: %s]
+    --class=<class>   specify the class you want to find in the url
 
     -r --raw-json     returns the raw JSON response from the Image Intelligence API
     --hitl=<hitl>     additional verification (AUTO, ALWAYS, NEVER) [default: %s]
@@ -45,7 +43,6 @@ Options:
 Author: %s <%s>, Image Intelligence
 GitHub: https://github.com/ImageIntelligence/ava-slackbot
 API: https://docs.imageintelligence.com""" % (
-        DEFAULT_CLASS,
         DEFAULT_HITL,
         __author__,
         __author_email__
@@ -68,6 +65,4 @@ API: https://docs.imageintelligence.com""" % (
             parsed_data = {'--extras': 'Ava Slackbot v%s' % __version__, **arguments}
         else:
             parsed_data = arguments
-
-        print(parsed_data)
         return {**slack_data, **parsed_data}
