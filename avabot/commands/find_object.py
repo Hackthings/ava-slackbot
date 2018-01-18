@@ -16,16 +16,15 @@ class FindObject(Command):
         super().__init__(config, **kwargs)
 
     def parse_results(self, results):
-        image_results = results['imageResults'][0]
         results_message = [
             '<@%s> OK `/find-object/%s` *%s*:\n' % (
                 self.kwargs['user'], results['id'], results['status'],
             ),
         ]
-
-        for obj in image_results['objects']:
-            results_message.append('`%s:%s`' % (obj['class'], obj['confidence']))
-        results_message.append('\n*Target image:* %s' % image_results['url'])
+        for image_result in results['imageResults']:
+            results_message.append('\n*Target image:* %s\n' % image_result['url'])
+            for obj in image_result['objects']:
+                results_message.append('`%s:%s`' % (obj['class'], obj['confidence']))
         return '\n'.join(results_message)
 
     def run(self):
