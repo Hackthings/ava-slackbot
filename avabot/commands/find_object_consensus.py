@@ -35,23 +35,37 @@ class FindObjectConsensus(Command):
         return '\n'.join(results_message)
 
     def call_api_with_model_id(self, model_id):
-        image_url = self.kwargs['<url>']
-        class_ = self.kwargs.get('<class>') or DEFAULT_CLASS
+        image_urls = self.kwargs['<urls>']
 
-        logging.info('posting to /v2/find-object - url=%s' % image_url)
+        # get class from args
+        # todo: factor out and reuse
+        classes = set()
+        if self.kwargs.get('--class'):
+            classes.add(self.kwargs.get('--class'))
+
+        if self.kwargs.get('-c'):
+            classes.add("car")
+
+        if self.kwargs.get('-p'):
+            classes.add("person")
+
+        if len(classes) == 0:
+            classes = {DEFAULT_CLASS}
+
+        logging.info('posting to /v2/find-object - urls=%s' % image_urls)
         try:
             response = self.ii_client.find_object(
-                [{'url': image_url}],
-                [{'class': class_, 'hitl': 'NEVER', 'model': model_id}],
+                [{'url': image} for image in image_urls],
+                [{'class': class_, 'hitl': 'NEVER', 'model': model_id} for class_ in classes],
                 custom_id='ava-slackbot-' + str(uuid.uuid4()),
             )
         except ApiRequestError as e:
-            logging.info('failed to POST /v2/find-object - url=%s, error=%s' % (image_url, e))
+            logging.info('failed to POST /v2/find-object - urls=%s, error=%s' % (image_urls, e))
             return
 
         success_message = 'successfully POST\'d to /v2/find-object, polling for results -url=${url} - jobId={job_id}'
         logging.info(success_message.format(**{
-            'url': image_url,
+            'url': image_urls,
             'job_id': response['id'],
         }))
         return self.ii_client.poll_for_object_result(response['id'])
