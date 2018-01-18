@@ -17,8 +17,9 @@ class MessageParser(Parser):
     __doc__ = """Ava Slackbot
 
 Usage:
-    @ava (fo|find-object) <url> [<class> [<model_id>]] [--hitl=<hitl>] [--raw-json]
-    @ava (foc|find-object-consensus) <url> [<class>] [--raw-json]
+    @ava (fo|find-object) <urls>... [-pc] [--class=<class>] [--model=<model_id>] [--hitl=<hitl>] [-r|--raw-json]
+    @ava (foc|find-object-consensus) <urls>... [-pc] [--class=<class>] [--raw-json]
+
     @ava (-h|--help|-v|--version)
 
 Commands:
@@ -26,7 +27,7 @@ Commands:
     (foc|find-object-consensus)  multiple requests for multiple modules against /find-object
 
 Arguments:
-    <url>             image url you want to run detections on
+    <urls>...         image urls you want to run detections on
     <model_id>        the model id you want to perform classification against
     <class>           the class you want to find in the url [default: %s]
 
@@ -34,7 +35,11 @@ Options:
     -h --help         shows this
     -v --version      shows version
 
-    --raw-json        returns the raw JSON response from the Image Intelligence API
+    -p                person class
+    -c                car class
+    --class           specify the class you want to find in the url [default: %s]
+
+    -r --raw-json     returns the raw JSON response from the Image Intelligence API
     --hitl=<hitl>     additional verification (AUTO, ALWAYS, NEVER) [default: %s]
 
 Author: %s <%s>, Image Intelligence
@@ -63,4 +68,6 @@ API: https://docs.imageintelligence.com""" % (
             parsed_data = {'--extras': 'Ava Slackbot v%s' % __version__, **arguments}
         else:
             parsed_data = arguments
+
+        print(parsed_data)
         return {**slack_data, **parsed_data}
