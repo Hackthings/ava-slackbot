@@ -5,6 +5,7 @@ import logging
 from functools import partial
 
 from avabot.commands.find_object import FindObject
+from avabot.commands.find_target import FindTarget
 from avabot.commands.find_object_consensus import FindObjectConsensus
 from avabot.config import load as load_config
 from avabot.exceptions import AvaSlackbotException
@@ -35,6 +36,8 @@ def handle_message(slack_client, ii_client, config, args):
             FindObject(config, ii_client, slack_client, **args)
         elif any([args['foc'], args['find-object-consensus']]):
             FindObjectConsensus(config, ii_client, slack_client, **args)
+        elif any([args['ft'], args['find-target']]):
+            FindTarget(config, ii_client, slack_client, **args)
         else:
             logging.error('unexpected args %s' % args)
     except AvaSlackbotException as e:
