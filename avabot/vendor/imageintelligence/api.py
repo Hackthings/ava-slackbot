@@ -70,7 +70,7 @@ class ImageIntelligenceApi:
     def get_job(self, path, job_id):
         return self.api_request(
             requests.get,
-            self.base_endpoint + path + job_id,
+            self.base_endpoint + path + '/' + job_id,
             self.refresh_token(),
         )
 
