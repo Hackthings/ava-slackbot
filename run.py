@@ -5,6 +5,7 @@ import logging
 from functools import partial
 
 from avabot.commands.find_object import FindObject
+from avabot.commands.get_find_object import GetFindObject
 from avabot.commands.find_target import FindTarget
 from avabot.commands.get_find_target import GetFindTarget
 from avabot.commands.find_object_consensus import FindObjectConsensus
@@ -35,6 +36,8 @@ def handle_message(slack_client, ii_client, config, args):
             )
         elif any([args['fo'], args['find-object']]):
             FindObject(config, ii_client, slack_client, **args)
+        elif any([args['gfo'], args['get-find-object']]):
+            GetFindObject(config, ii_client, slack_client, **args)
         elif any([args['foc'], args['find-object-consensus']]):
             FindObjectConsensus(config, ii_client, slack_client, **args)
         elif any([args['ft'], args['find-target']]):

@@ -18,29 +18,28 @@ class MessageParser(Parser):
 
 Usage:
     @ava (fo|find-object) <urls>... [-pc] [--class=<class>] [--model=<model_id>] [--hitl=<hitl>] [-r|--raw-json]
+    @ava (gfo|get-find-object) <job_id> [-r|--raw-json]
     @ava (foc|find-object-consensus) <urls>... [-pc] [--class=<class>] [-r|--raw-json]
     @ava (ft|find-target) <urls>... --target=<target> [-r|--raw-json]
     @ava (gft|get-find-target) <job_id> [-r|--raw-json]
     @ava (-h|--help|-v|--version)
 
-Commands:
-    (fo|find-object)             request against /find-object
-    (foc|find-object-consensus)  multiple requests for multiple modules against /find-object
-
 Arguments:
-    <urls>...         image urls you want to run detections on
-    <model_id>        the model id you want to perform classification against
+    <urls>...          image urls (space sperated) you want to run detections on
+    <job_id>           job id
 
 Options:
-    -h --help         shows this
-    -v --version      shows version
+    -h --help          shows this
+    -v --version       shows version
 
-    -p                person class (default)
-    -c                car class
-    --class=<class>   specify the class you want to find in the url
+    -p                 person class (default)
+    -c                 car class
 
-    -r --raw-json     returns the raw JSON response from the Image Intelligence API
-    --hitl=<hitl>     additional verification (AUTO, ALWAYS, NEVER) [default: %s]
+    --class=<class>    specify the class you want to find in the url
+    --model=<model_id> specify model to use
+    --target=<target>  target image url. required for ft request
+    --hitl=<hitl>      additional verification for fo request (AUTO, ALWAYS, NEVER) [default: %s]
+    -r --raw-json      returns the raw JSON response from the Image Intelligence API
 
 Author: %s <%s>, Image Intelligence
 GitHub: https://github.com/ImageIntelligence/ava-slackbot

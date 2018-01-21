@@ -6,3 +6,4 @@ __pycache__
 local.env.list
 test.env.list
 /set_env.sh
+/.DS_Store
