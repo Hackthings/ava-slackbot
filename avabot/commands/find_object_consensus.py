@@ -29,7 +29,9 @@ class FindObjectConsensus(Command):
             image_results = result['imageResults'][0]
 
             for obj in image_results['objects']:
-                results_message.append('*modelId:* %s, `%s:%s`' % (self.MODEL_IDS[i], obj['class'], obj['confidence']))
+                results_message.append('*modelId:* %s, `%s:%s`' %
+                                       (self.MODEL_IDS[i], obj['class'],
+                                        obj['confidence']))
 
         results_message.append('\n*Target image:* %s' % target_image)
         return '\n'.join(results_message)
@@ -55,19 +57,27 @@ class FindObjectConsensus(Command):
         logging.info('posting to /v2/find-object - urls=%s' % image_urls)
         try:
             response = self.ii_client.find_object(
-                [{'url': image} for image in image_urls],
-                [{'class': class_, 'hitl': 'NEVER', 'model': model_id} for class_ in classes],
+                [{
+                    'url': image
+                } for image in image_urls],
+                [{
+                    'class': class_,
+                    'hitl': 'NEVER',
+                    'model': model_id
+                } for class_ in classes],
                 custom_id='ava-slackbot-' + str(uuid.uuid4()),
             )
         except ApiRequestError as e:
-            logging.info('failed to POST /v2/find-object - urls=%s, error=%s' % (image_urls, e))
+            logging.info('failed to POST /v2/find-object - urls=%s, error=%s' %
+                         (image_urls, e))
             return
 
         success_message = 'successfully POST\'d to /v2/find-object, polling for results -url=${url} - jobId={job_id}'
-        logging.info(success_message.format(**{
-            'url': image_urls,
-            'job_id': response['id'],
-        }))
+        logging.info(
+            success_message.format(**{
+                'url': image_urls,
+                'job_id': response['id'],
+            }))
         return self.ii_client.poll_for_object_result(response['id'])
 
     def run(self):
@@ -82,9 +92,7 @@ class FindObjectConsensus(Command):
             self.slack_client.send_formatted_message(
                 'OK `/find-object/{id}` - JSON:',
                 json.dumps(results, indent=2, sort_keys=True),
-                self.kwargs['channel'],
-                self.kwargs['user']
-            )
+                self.kwargs['channel'], self.kwargs['user'])
         else:
             self.slack_client.send_formatted_message(
                 None,
