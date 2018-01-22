@@ -22,7 +22,6 @@ class FindTarget(Command):
         return '\n'.join(results_message)
 
     def run(self):
-        print(self.kwargs)
         image_urls = self.kwargs['<urls>']
         target = self.kwargs['--target'][1:]
         is_raw_json = self.kwargs['--raw-json']

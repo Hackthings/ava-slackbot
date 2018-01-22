@@ -31,7 +31,6 @@ class GetFindTarget(Command):
         return '\n'.join(message)
 
     def run(self):
-        print(self.kwargs)
         is_raw_json = self.kwargs['--raw-json']
         job_id = self.kwargs['<job_id>']
 

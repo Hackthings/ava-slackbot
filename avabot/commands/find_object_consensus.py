@@ -85,7 +85,6 @@ class FindObjectConsensus(Command):
 
         results = []
         for model_id in self.MODEL_IDS:
-            print(model_id)
             results.append(self.call_api_with_model_id(model_id))
 
         if is_raw_json:
