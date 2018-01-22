@@ -14,18 +14,14 @@ class GetFindObject(Command):
         super().__init__(config, **kwargs)
 
     def parse_results(self, results):
-        message = [
-            '<@%s> OK `/find-object/%s`' % (self.kwargs['user'],
-                                            results['id']),
-        ]
+        message = ['<@%s> OK `/find-object/%s`' % (self.kwargs['user'], results['id'])]
         message.append('\n*Job Status:* %s\n' % results['status'])
 
         if results['status'] == "COMPLETED_SUCCESSFULLY":
             for image_result in results['imageResults']:
                 message.append('\n*Target image:* %s\n' % image_result['url'])
                 for obj in image_result['objects']:
-                    message.append('`%s:%s`' % (obj['class'],
-                                                obj['confidence']))
+                    message.append('`%s:%s`' % (obj['class'], obj['confidence']))
         return '\n'.join(message)
 
     def run(self):
@@ -36,21 +32,13 @@ class GetFindObject(Command):
         try:
             response = self.ii_client.get_find_object_job(job_id)
         except ApiRequestError as e:
-            logging.info(
-                'failed to GET /v2/find-object - job_id=%s, error=%s' %
-                (job_id, e))
+            logging.info('failed to GET /v2/find-object - job_id=%s, error=%s' % (job_id, e))
             return
 
         if is_raw_json:
-            self.slack_client.send_formatted_message(
-                'OK `/find-object/%s` - JSON:' % response['id'],
-                json.dumps(response, indent=2, sort_keys=True),
-                self.kwargs['channel'], self.kwargs['user'])
+            self.slack_client.send_formatted_message('OK `/find-object/%s` - JSON:' % response['id'],
+                                                     json.dumps(response, indent=2, sort_keys=True),
+                                                     self.kwargs['channel'], self.kwargs['user'])
         else:
             self.slack_client.send_formatted_message(
-                None,
-                self.parse_results(response),
-                self.kwargs['channel'],
-                self.kwargs['user'],
-                is_code=False,
-            )
+                None, self.parse_results(response), self.kwargs['channel'], self.kwargs['user'], is_code=False)
