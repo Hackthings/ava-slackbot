@@ -40,15 +40,13 @@ class FindObjectConsensus(Command):
     def call_api_with_model_id(self, model_id):
         image_urls = self.kwargs['<urls>']
 
-        # get class from args
-        classes = set()
-        if self.kwargs.get('--class'):
-            classes.add(self.kwargs.get('--class'))
+        # get classes from args
+        classes = set(self.kwargs['--class'])
 
-        if self.kwargs.get('-c'):
+        if self.kwargs['-c']:
             classes.add('car')
 
-        if self.kwargs.get('-p'):
+        if self.kwargs['-p']:
             classes.add('person')
 
         if len(classes) == 0:

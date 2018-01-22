@@ -17,29 +17,29 @@ class MessageParser(Parser):
     __doc__ = """Ava Slackbot
 
 Usage:
-    @ava (fo|find-object) <urls>... [-pc] [--class=<class>] [--model=<model_id>] [--hitl=<hitl>] [-r|--raw-json]
+    @ava (fo|find-object) <urls>... [(--class=<class>)...] [-pc] [--model=<model_id>] [--hitl=<hitl>] [-r|--raw-json]
     @ava (gfo|get-find-object) <job_id> [-r|--raw-json]
-    @ava (foc|find-object-consensus) <urls>... [-pc] [--class=<class>] [-r|--raw-json]
+    @ava (foc|find-object-consensus) <urls>... [(--class=<class>)] [-pc] [-r|--raw-json]
     @ava (ft|find-target) <urls>... --target=<target> [-r|--raw-json]
     @ava (gft|get-find-target) <job_id> [-r|--raw-json]
     @ava (-h|--help|-v|--version)
 
 Arguments:
-    <urls>...          image urls (space sperated) you want to run detections on
-    <job_id>           job id
+    <urls>...           image urls (space sperated) you want to run detections on
+    <job_id>            job id
 
 Options:
-    -h --help          shows this
-    -v --version       shows version
+    -h --help           shows this
+    -v --version        shows version
 
-    -p                 person class (default)
-    -c                 car class
+    -p                  person class (default)
+    -c                  car class
 
-    --class=<class>    specify the class you want to find in the url
-    --model=<model_id> specify model to use
-    --target=<target>  target image url. required for ft request
-    --hitl=<hitl>      additional verification for fo request (AUTO, ALWAYS, NEVER) [default: %s]
-    -r --raw-json      returns the raw JSON response from the Image Intelligence API
+    --class=<class>     specify the class you want to find in the url
+    --model=<model_id>  specify model to use
+    --target=<target>   target image url. required for ft request
+    --hitl=<hitl>       additional verification for fo request (AUTO, ALWAYS, NEVER) [default: %s]
+    -r --raw-json       returns the raw JSON response from the Image Intelligence API
 
 Author: %s <%s>, Image Intelligence
 GitHub: https://github.com/ImageIntelligence/ava-slackbot
