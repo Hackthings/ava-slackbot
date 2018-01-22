@@ -21,16 +21,20 @@ class FindObjectConsensus(Command):
         super().__init__(config, **kwargs)
 
     def parse_results(self, results):
-        results_message = ['<@%s> OK `/find-object/{id}`:\n' % self.kwargs['user']]
+        user = self.kwargs['user']
+        results_message = [f'<@{user}> OK `/find-object/`:\n']
         target_image = results[0]['imageResults'][0]['url']
 
         for i, result in enumerate(results):
             image_results = result['imageResults'][0]
 
             for obj in image_results['objects']:
-                results_message.append('*modelId:* %s, `%s:%s`' % (self.MODEL_IDS[i], obj['class'], obj['confidence']))
+                cls = obj['class']
+                cnf = obj['confidence']
+                model_id = self.MODEL_IDS[i]
+                results_message.append(f'*modelId:* {model_id}, `{cls}:{cnf}`')
 
-        results_message.append('\n*Target image:* %s' % target_image)
+        results_message.append(f'\n*Target image:* {target_image}')
         return '\n'.join(results_message)
 
     def call_api_with_model_id(self, model_id):
@@ -50,7 +54,7 @@ class FindObjectConsensus(Command):
         if len(classes) == 0:
             classes = {DEFAULT_CLASS}
 
-        logging.info('posting to /v2/find-object - urls=%s' % image_urls)
+        logging.info(f'posting to /v2/find-object - urls={image_urls}')
 
         images = [{'url': image} for image in image_urls]
         classes = [{'class': cls, 'hitl': 'NEVER', 'model': model_id} for cls in classes]
@@ -58,11 +62,11 @@ class FindObjectConsensus(Command):
         try:
             response = self.ii_client.find_object(images, classes, custom_id='ava-slackbot-' + str(uuid.uuid4()))
         except ApiRequestError as e:
-            logging.info('failed to POST /v2/find-object - urls=%s, error=%s' % (image_urls, e))
+            logging.info(f'failed to POST /v2/find-object - urls={image_urls}, error={e}')
             return
 
-        success_message = 'successfully POST\'d to /v2/find-object, polling for results -url=${url} - jobId={job_id}'
-        logging.info(success_message.format(**{'url': image_urls, 'job_id': response['id']}))
+        job_id = response['id']
+        logging.info(f'successfully POST\'d to /v2/find-object, polling results -url=${image_urls} - jobId={job_id}')
         return self.ii_client.poll_for_object_result(response['id'])
 
     def run(self):
@@ -73,7 +77,7 @@ class FindObjectConsensus(Command):
             results.append(self.call_api_with_model_id(model_id))
 
         if is_raw_json:
-            self.slack_client.send_formatted_message('OK `/find-object/{id}` - JSON:',
+            self.slack_client.send_formatted_message('OK `/find-object/` - JSON:',
                                                      json.dumps(results, indent=2, sort_keys=True),
                                                      self.kwargs['channel'], self.kwargs['user'])
         else:

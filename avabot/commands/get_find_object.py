@@ -14,29 +14,35 @@ class GetFindObject(Command):
         super().__init__(config, **kwargs)
 
     def parse_results(self, results):
-        message = ['<@%s> OK `/find-object/%s`' % (self.kwargs['user'], results['id'])]
-        message.append('\n*Job Status:* %s\n' % results['status'])
+        user = self.kwargs['user']
+        job_id = results['id']
+        status = results['status']
+        message = [f'<@{user}> OK `/find-object/{job_id}`']
+        message.append(f'\n*Job Status:* {status}\n')
 
         if results['status'] == "COMPLETED_SUCCESSFULLY":
             for image_result in results['imageResults']:
-                message.append('\n*Target image:* %s\n' % image_result['url'])
+                img_result_url = image_result['url']
+                message.append(f'\n*Target image:* {img_result_url}\n')
                 for obj in image_result['objects']:
-                    message.append('`%s:%s`' % (obj['class'], obj['confidence']))
+                    cls = obj['class']
+                    cnf = obj['confidence']
+                    message.append(f'`{cls}:{cnf}`')
         return '\n'.join(message)
 
     def run(self):
         is_raw_json = self.kwargs['--raw-json']
         job_id = self.kwargs['<job_id>']
 
-        logging.info('GET /v2/find-object - job_id=%s' % job_id)
+        logging.info(f'GET /v2/find-object - job_id={job_id}')
         try:
             response = self.ii_client.get_find_object_job(job_id)
         except ApiRequestError as e:
-            logging.info('failed to GET /v2/find-object - job_id=%s, error=%s' % (job_id, e))
+            logging.info(f'failed to GET /v2/find-object - job_id={job_id}, error={e}')
             return
 
         if is_raw_json:
-            self.slack_client.send_formatted_message('OK `/find-object/%s` - JSON:' % response['id'],
+            self.slack_client.send_formatted_message(f'OK `/find-object/{job_id}` - JSON:',
                                                      json.dumps(response, indent=2, sort_keys=True),
                                                      self.kwargs['channel'], self.kwargs['user'])
         else:

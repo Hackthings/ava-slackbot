@@ -15,25 +15,27 @@ class FindTarget(Command):
         super().__init__(config, **kwargs)
 
     def parse_results(self, results):
-        results_message = ['<@%s> OK -- submitted `/find-target` job %s\n' % (self.kwargs['user'], results['id'])]
-        return '\n'.join(results_message)
+        user = self.kwargs['user']
+        job_id = results['id']
+        return f'<@{user}> OK -- submitted `/find-target` job id `{job_id}`\n'
 
     def run(self):
         image_urls = self.kwargs['<urls>']
         target = self.kwargs['--target'][1:]
         is_raw_json = self.kwargs['--raw-json']
 
-        logging.info('posting to /v2/find-target - urls=%s' % image_urls)
+        logging.info(f'posting to /v2/find-target - urls={image_urls}')
         images = [{'url': image} for image in image_urls]
         target = {'class': "person", 'images': [target]}
         try:
             response = self.ii_client.find_target(images, target, custom_id='ava-slackbot-' + str(uuid.uuid4()))
         except ApiRequestError as e:
-            logging.info('failed to POST /v2/find-target - urls=%s, error=%s' % (image_urls, e))
+            logging.info(f'failed to POST /v2/find-target - urls={image_urls}, error={e}')
             return
 
+        job_id = response['id']
         if is_raw_json:
-            self.slack_client.send_formatted_message('OK `/find-target/%s` - JSON:' % response['id'],
+            self.slack_client.send_formatted_message(f'OK `/find-target/{job_id}` - JSON:',
                                                      json.dumps(response, indent=2, sort_keys=True),
                                                      self.kwargs['channel'], self.kwargs['user'])
         else:

@@ -16,14 +16,18 @@ class FindObject(Command):
         super().__init__(config, **kwargs)
 
     def parse_results(self, results):
-        results_message = [
-            '<@%s> OK `/find-object/%s` *%s*:\n' % (self.kwargs['user'], results['id'], results['status'])
-        ]
+        user = self.kwargs['user']
+        job_id = results['id']
+        status = results['status']
+        results_message = [f'<@{user}> OK `/find-object/{job_id}` *{status}*:\n']
 
         for image_result in results['imageResults']:
-            results_message.append('\n*Target image:* %s\n' % image_result['url'])
+            img_result_url = image_result['url']
+            results_message.append(f'\n*Target image:* {img_result_url}\n')
             for obj in image_result['objects']:
-                results_message.append('`%s:%s`' % (obj['class'], obj['confidence']))
+                cls = obj['class']
+                cnf = obj['confidence']
+                results_message.append(f'`{cls}:{cnf}`')
         return '\n'.join(results_message)
 
     def run(self):
@@ -47,7 +51,7 @@ class FindObject(Command):
         hitl = self.kwargs.get('--hitl') or DEFAULT_HITL
         is_raw_json = self.kwargs['--raw-json']
 
-        logging.info('posting to /v2/find-object - url=%s' % image_urls)
+        logging.info(f'posting to /v2/find-object - url={image_urls}')
 
         images = [{'url': image} for image in image_urls]
         classes = [{'class': cls, 'hitl': hitl, 'model': model_id} for cls in classes]
@@ -55,15 +59,15 @@ class FindObject(Command):
         try:
             response = self.ii_client.find_object(images, classes, custom_id='ava-slackbot-' + str(uuid.uuid4()))
         except ApiRequestError as e:
-            logging.info('failed to POST /v2/find-object - urls=%s, error=%s' % (image_urls, e))
+            logging.info(f'failed to POST /v2/find-object - urls={image_urls}, error={e}')
             return
 
-        success_message = 'successfully POST\'d to /v2/find-object, polling for results -urls=${urls} - jobId={job_id}'
-        logging.info(success_message.format(**{'urls': image_urls, 'job_id': response['id']}))
+        job_id = response['id']
+        logging.info(f'successfully POST\'d to /v2/find-object, polling results -urls=${image_urls} - jobId={job_id}')
 
         result = self.ii_client.poll_for_object_result(response['id'])
         if is_raw_json:
-            self.slack_client.send_formatted_message('OK `/find-object/%s` - JSON:' % result['id'],
+            self.slack_client.send_formatted_message(f'OK `/find-object/{job_id}` - JSON:',
                                                      json.dumps(result, indent=2, sort_keys=True),
                                                      self.kwargs['channel'], self.kwargs['user'])
         else:
