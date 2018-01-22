@@ -22,7 +22,7 @@ class TestImageIntelligenceApiFindObject:
             {'class': 'person'},
         ])
         assert len(response['imageResults']) == 1
-        assert len(response['jobResults']) == 0
+        assert len(response['jobResults']) == 1
         assert response['status'] == 'IN_PROGRESS'
 
     def test_does_not_allow_very_long_image_urls(self):
@@ -42,7 +42,7 @@ class TestImageIntelligenceApiFindObject:
             {'class': 'person'},
         ])
         assert len(response['imageResults']) == 3
-        assert len(response['jobResults']) == 0
+        assert len(response['jobResults']) == 1
         assert response['status'] == 'IN_PROGRESS'
 
     def test_does_not_allow_empty_images(self):
@@ -67,15 +67,14 @@ class TestImageIntelligenceApiFindObject:
             api.find_object([{'url': 'xxx'}], [{'class': 'person'}])
 
     def test_allows_multiple_classes_to_be_specified(self):
-        # api = ImageIntelligenceApi(self.client_id, self.client_secret, self.base_endpoint, self.token)
-        # response = api.find_object([
-        #     {'url': 'https://www.placecage.com/c/200/300'},
-        # ], [
-        #     {'class': 'car'}, {'class': 'person'},
-        # ])
-        # assert response['status'] == 'IN_PROGRESS'
-        pass
-        # TODO: Handle this properly.
+        api = ImageIntelligenceApi(self.client_id, self.client_secret, self.base_endpoint, self.token)
+        response = api.find_object([
+            {'url': 'https://www.placecage.com/c/200/300'},
+        ], [
+            {'class': 'car'}, {'class': 'person'},
+        ])
+        assert response['status'] == 'IN_PROGRESS'
+        assert len(response['jobResults']) == 2
 
     def test_does_not_allow_unaccepted_classes(self):
         api = ImageIntelligenceApi(self.client_id, self.client_secret, self.base_endpoint, self.token)
