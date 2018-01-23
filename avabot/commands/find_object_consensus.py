@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import uuid
 import logging
-import json
 
 from avabot.commands import Command
 from avabot.exceptions.imageintelligence import ApiRequestError
@@ -56,17 +55,8 @@ class FindObjectConsensus(Command):
         logging.info(f'successfully POST\'d to /v2/find-object, polling results -url=${image_urls} - jobId={job_id}')
         return self.ii_client.poll_for_object_result(response['id'])
 
-    def run(self):
-        is_raw_json = self.kwargs['--raw-json']
-        channel = self.kwargs['channel']
-        user = self.kwargs['user']
-
+    def request(self):
         results = []
         for model_id in self.MODEL_IDS:
             results.append(self.call_api_with_model_id(model_id))
-
-        if is_raw_json:
-            self.slack_client.send_formatted_message('OK `/find-object/` - JSON:',
-                                                     json.dumps(results, indent=2, sort_keys=True), channel, user)
-        else:
-            self.slack_client.send_formatted_message(None, self.parse_results(results), channel, user, is_code=False)
+        return results

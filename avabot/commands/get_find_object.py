@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-import json
 
 from avabot.commands import Command
 from avabot.exceptions.imageintelligence import ApiRequestError
@@ -30,21 +29,12 @@ class GetFindObject(Command):
                     message.append(f'`{cls}:{cnf}`')
         return '\n'.join(message)
 
-    def run(self):
-        is_raw_json = self.kwargs['--raw-json']
+    def request(self):
         job_id = self.kwargs['<job_id>']
-        channel = self.kwargs['channel']
-        user = self.kwargs['user']
 
         logging.info(f'GET /v2/find-object - job_id={job_id}')
         try:
-            response = self.ii_client.get_find_object_job(job_id)
+            return self.ii_client.get_find_object_job(job_id)
         except ApiRequestError as e:
             logging.info(f'failed to GET /v2/find-object - job_id={job_id}, error={e}')
             return
-
-        if is_raw_json:
-            self.slack_client.send_formatted_message(f'OK `/find-object/{job_id}` - JSON:',
-                                                     json.dumps(response, indent=2, sort_keys=True), channel, user)
-        else:
-            self.slack_client.send_formatted_message(None, self.parse_results(response), channel, user, is_code=False)
