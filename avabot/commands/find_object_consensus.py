@@ -39,18 +39,7 @@ class FindObjectConsensus(Command):
 
     def call_api_with_model_id(self, model_id):
         image_urls = self.kwargs['<urls>']
-
-        # get classes from args
-        classes = set(self.kwargs['--class'])
-
-        if self.kwargs['-c']:
-            classes.add('car')
-
-        if self.kwargs['-p']:
-            classes.add('person')
-
-        if len(classes) == 0:
-            classes = {DEFAULT_CLASS}
+        classes = self.kwargs['--class'] or [DEFAULT_CLASS]
 
         logging.info(f'posting to /v2/find-object - urls={image_urls}')
 

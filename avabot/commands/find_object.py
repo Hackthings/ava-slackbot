@@ -32,19 +32,7 @@ class FindObject(Command):
 
     def run(self):
         image_urls = self.kwargs['<urls>']
-
-        # get classes from args
-        classes = set(self.kwargs['--class'])
-
-        if self.kwargs['-c']:
-            classes.add('car')
-
-        if self.kwargs['-p']:
-            classes.add('person')
-
-        if len(classes) == 0:
-            classes = {DEFAULT_CLASS}
-
+        classes = self.kwargs['--class'] or [DEFAULT_CLASS]
         model_id = self.kwargs['--model']
         hitl = self.kwargs.get('--hitl') or DEFAULT_HITL
         is_raw_json = self.kwargs['--raw-json']

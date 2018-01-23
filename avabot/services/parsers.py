@@ -17,29 +17,25 @@ class MessageParser(Parser):
     __doc__ = """Ava Slackbot
 
 Usage:
-    @ava (fo|find-object) <urls>... [(--class=<class>)...] [-pc] [--model=<model_id>] [--hitl=<hitl>] [-r|--raw-json]
-    @ava (gfo|get-find-object) <job_id> [-r|--raw-json]
-    @ava (foc|find-object-consensus) <urls>... [(--class=<class>)] [-pc] [-r|--raw-json]
-    @ava (ft|find-target) <urls>... (--target=<target>)... [-r|--raw-json]
-    @ava (gft|get-find-target) <job_id> [-r|--raw-json]
-    @ava (-h|--help|-v|--version)
+    @ava (fo|find-object) <urls>... [(--class=<class>)...] [--model=<model_id>] [--hitl=<hitl>] [--raw-json]
+    @ava (gfo|get-find-object) <job_id> [--raw-json]
+    @ava (foc|find-object-consensus) <urls>... [(--class=<class>)...] [--raw-json]
+    @ava (ft|find-target) <urls>... (--target=<target>)... [--raw-json]
+    @ava (gft|get-find-target) <job_id> [--raw-json]
+    @ava (--help|--version)
 
 Arguments:
-    <urls>...           image urls (space sperated) you want to run detections on
-    <job_id>            job id
+    <urls>...              image urls (space sperated) you want to run detections on
+    <job_id>               job id
 
 Options:
-    -h --help           shows this
-    -v --version        shows version
-
-    -p                  person class (default)
-    -c                  car class
-
-    --class=<class>     specify the class you want to find in the url
-    --model=<model_id>  specify model to use
-    --target=<target>   target image url. required for ft request
-    --hitl=<hitl>       additional verification for fo request (AUTO, ALWAYS, NEVER) [default: %s]
-    -r --raw-json       returns the raw JSON response from the Image Intelligence API
+    -c --class=<class>     specify the class you want to find in the url
+    -m --model=<model_id>  specify model to use
+    -t --target=<target>   target image urls for ft requests
+    -l --hitl=<hitl>       additional verification for fo requests (AUTO, ALWAYS, NEVER) [default: %s]
+    -r --raw-json          returns the raw JSON response from the Image Intelligence API
+    -h --help              shows this
+    -v --version           shows version
 
 Author: %s <%s>, Image Intelligence
 GitHub: https://github.com/ImageIntelligence/ava-slackbot
