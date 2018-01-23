@@ -23,11 +23,11 @@ class GetFindTarget(Command):
         message.append(f'\n*Job Status:* {status}\n')
         message.append(f'\n*Target:* {target_image}\n')
 
-        if results['status'] == "COMPLETED_SUCCESSFULLY":
+        if results['status'] == 'COMPLETED_SUCCESSFULLY':
             if 'image' in results['jobResults']:
                 res = results['jobResults']['image']['url']
             else:
-                res = "None"
+                res = 'None'
             message.append(f'\n*Result:* {res}\n')
 
         return '\n'.join(message)
@@ -35,6 +35,8 @@ class GetFindTarget(Command):
     def run(self):
         is_raw_json = self.kwargs['--raw-json']
         job_id = self.kwargs['<job_id>']
+        channel = self.kwargs['channel']
+        user = self.kwargs['user']
 
         logging.info(f'GET /v2/find-target - job_id={job_id}')
         try:
@@ -45,8 +47,6 @@ class GetFindTarget(Command):
 
         if is_raw_json:
             self.slack_client.send_formatted_message(f'OK `/find-target/{job_id}` - JSON:',
-                                                     json.dumps(response, indent=2, sort_keys=True),
-                                                     self.kwargs['channel'], self.kwargs['user'])
+                                                     json.dumps(response, indent=2, sort_keys=True), channel, user)
         else:
-            self.slack_client.send_formatted_message(
-                None, self.parse_results(response), self.kwargs['channel'], self.kwargs['user'], is_code=False)
+            self.slack_client.send_formatted_message(None, self.parse_results(response), channel, user, is_code=False)

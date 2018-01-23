@@ -58,6 +58,8 @@ class FindObjectConsensus(Command):
 
     def run(self):
         is_raw_json = self.kwargs['--raw-json']
+        channel = self.kwargs['channel']
+        user = self.kwargs['user']
 
         results = []
         for model_id in self.MODEL_IDS:
@@ -65,8 +67,6 @@ class FindObjectConsensus(Command):
 
         if is_raw_json:
             self.slack_client.send_formatted_message('OK `/find-object/` - JSON:',
-                                                     json.dumps(results, indent=2, sort_keys=True),
-                                                     self.kwargs['channel'], self.kwargs['user'])
+                                                     json.dumps(results, indent=2, sort_keys=True), channel, user)
         else:
-            self.slack_client.send_formatted_message(
-                None, self.parse_results(results), self.kwargs['channel'], self.kwargs['user'], is_code=False)
+            self.slack_client.send_formatted_message(None, self.parse_results(results), channel, user, is_code=False)

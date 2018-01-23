@@ -49,13 +49,13 @@ class FindObject(Command):
             return
 
         job_id = response['id']
+        channel = self.kwargs['channel']
+        user = self.kwargs['user']
         logging.info(f'successfully POST\'d to /v2/find-object, polling results -urls=${image_urls} - jobId={job_id}')
 
         result = self.ii_client.poll_for_object_result(response['id'])
         if is_raw_json:
             self.slack_client.send_formatted_message(f'OK `/find-object/{job_id}` - JSON:',
-                                                     json.dumps(result, indent=2, sort_keys=True),
-                                                     self.kwargs['channel'], self.kwargs['user'])
+                                                     json.dumps(result, indent=2, sort_keys=True), channel, user)
         else:
-            self.slack_client.send_formatted_message(
-                None, self.parse_results(result), self.kwargs['channel'], self.kwargs['user'], is_code=False)
+            self.slack_client.send_formatted_message(None, self.parse_results(result), channel, user, is_code=False)
