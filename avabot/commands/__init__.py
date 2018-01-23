@@ -23,3 +23,9 @@ class Command:
                                                      json.dumps(response, indent=2, sort_keys=True), channel, user)
         else:
             self.slack_client.send_formatted_message(None, self.parse_results(response), channel, user, is_code=False)
+
+    def request(self):
+        raise NotImplementedError
+
+    def parse_results(self):
+        raise NotImplementedError
