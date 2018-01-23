@@ -20,7 +20,7 @@ Usage:
     @ava (fo|find-object) <urls>... [(--class=<class>)...] [-pc] [--model=<model_id>] [--hitl=<hitl>] [-r|--raw-json]
     @ava (gfo|get-find-object) <job_id> [-r|--raw-json]
     @ava (foc|find-object-consensus) <urls>... [(--class=<class>)] [-pc] [-r|--raw-json]
-    @ava (ft|find-target) <urls>... --target=<target> [-r|--raw-json]
+    @ava (ft|find-target) <urls>... (--target=<target>)... [-r|--raw-json]
     @ava (gft|get-find-target) <job_id> [-r|--raw-json]
     @ava (-h|--help|-v|--version)
 
