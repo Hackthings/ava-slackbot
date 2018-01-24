@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import requests
+import time
 from http import HTTPStatus
 
 from avabot.vendor.imageintelligence.auth import get_token
@@ -82,12 +83,7 @@ class ImageIntelligenceApi:
 
     def poll_for_job_result(self, path, job_id, attempts):
         endpoint = self.base_endpoint + path + '/' + job_id
-        response = self.api_request(
-            requests.get,
-            endpoint,
-            self.refresh_token(),
-        )
-        for _ in range(attempts - 1):
+        for _ in range(attempts):
             response = self.api_request(
                 requests.get,
                 endpoint,
@@ -95,6 +91,7 @@ class ImageIntelligenceApi:
             )
             if response['status'] != 'IN_PROGRESS':
                 return response
+            time.sleep(0.5)
         raise ApiRequestTimeoutError('polling for job results took too long - jobId=%s' % response['id'])
 
     def poll_for_target_result(self, job_id, attempts=MAX_POLL_ATTEMPTS):
