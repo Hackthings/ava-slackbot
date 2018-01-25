@@ -25,7 +25,7 @@ Usage:
     @ava (--help|--version)
 
 Arguments:
-    <urls>...              image urls (space sperated) you want to run detections on
+    <urls>...              image urls (space separated) you want to run detections on
     <job_id>               job id
 
 Options:
