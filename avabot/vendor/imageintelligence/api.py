@@ -8,10 +8,10 @@ from avabot.vendor.imageintelligence.auth import get_token
 from avabot.vendor.imageintelligence import BASE_ENDPOINT
 
 from avabot.exceptions.imageintelligence import ApiRequestError, ApiRequestTimeoutError
+from avabot.constants import MAX_POLL_ATTEMPTS
 
 
 class ImageIntelligenceApi:
-    MAX_POLL_ATTEMPTS = 5
 
     def __init__(self, client_id, client_secret, base_endpoint=BASE_ENDPOINT, token=None):
         self.client_id = client_id
