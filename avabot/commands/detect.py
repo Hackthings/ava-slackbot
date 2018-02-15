@@ -33,10 +33,10 @@ class Detect(Command):
         image_urls = self.kwargs['<urls>']
         classes = self.kwargs['--class'] or [DEFAULT_CLASS]
         model_id = self.kwargs['--model']
-        hitl = self.kwargs.get('--hitl') or DEFAULT_HITL
+        verify = self.kwargs.get('--verify') or DEFAULT_HITL
 
         images = [{'url': image} for image in image_urls]
-        classes = [{'class': cls, 'hitl': hitl, 'model': model_id} for cls in classes]
+        classes = [{'class': cls, 'verify': verify, 'model': model_id} for cls in classes]
 
         logging.info(f'posting to /v2/detect - url={image_urls}')
 
