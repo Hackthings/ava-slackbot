@@ -46,14 +46,14 @@ class DetectConsensus(Command):
         classes = [{'class': cls, 'hitl': 'NEVER', 'model': model_id} for cls in classes]
 
         try:
-            response = self.ii_client.find_object(images, classes, custom_id='ava-slackbot-' + str(uuid.uuid4()))
+            response = self.ii_client.detect(images, classes, custom_id='ava-slackbot-' + str(uuid.uuid4()))
         except ApiRequestError as e:
             logging.info(f'failed to POST /v2/detect - urls={image_urls}, error={e}')
             return
 
         job_id = response['id']
         logging.info(f'successfully POST\'d to /v2/detect, polling results -url=${image_urls} - jobId={job_id}')
-        return self.ii_client.poll_for_object_result(response['id'])
+        return self.ii_client.poll_for_detect_result(response['id'])
 
     def request(self):
         results = []

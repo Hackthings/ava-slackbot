@@ -37,7 +37,7 @@ class MatchGet(Command):
         job_id = self.kwargs['<job_id>']
         logging.info(f'GET /v2/match - job_id={job_id}')
         try:
-            return self.ii_client.get_find_target_job(job_id)
+            return self.ii_client.get_match_job(job_id)
         except ApiRequestError as e:
             logging.info(f'failed to GET /v2/match - job_id={job_id}, error={e}')
             return

@@ -41,8 +41,8 @@ class Detect(Command):
         logging.info(f'posting to /v2/detect - url={image_urls}')
 
         try:
-            response = self.ii_client.find_object(images, classes, custom_id='ava-slackbot-' + str(uuid.uuid4()))
-            result = self.ii_client.poll_for_object_result(response['id'])
+            response = self.ii_client.detect(images, classes, custom_id='ava-slackbot-' + str(uuid.uuid4()))
+            result = self.ii_client.poll_for_detect_result(response['id'])
         except ApiRequestError as e:
             logging.info(f'failed to POST /v2/detect - urls={image_urls}, error={e}')
             return

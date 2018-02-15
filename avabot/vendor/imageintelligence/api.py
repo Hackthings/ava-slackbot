@@ -40,10 +40,10 @@ class ImageIntelligenceApi:
             raise ApiRequestError('(%s) %s' % (response.status_code, response.text))
         return response.json()
 
-    def find_object(self, images, classes, webhook_url=None, feed_id=None, custom_id=None):
+    def detect(self, images, classes, webhook_url=None, feed_id=None, custom_id=None):
         return self.api_request(
             requests.post,
-            self.base_endpoint + '/find-object',
+            self.base_endpoint + '/detect',
             self.refresh_token(),
             payload={
                 'images': images,
@@ -54,10 +54,10 @@ class ImageIntelligenceApi:
             },
         )
 
-    def find_target(self, images, target, webhook_url=None, feed_id=None, custom_id=None):
+    def match(self, images, target, webhook_url=None, feed_id=None, custom_id=None):
         return self.api_request(
             requests.post,
-            self.base_endpoint + '/find-target',
+            self.base_endpoint + '/match',
             self.refresh_token(),
             payload={
                 'images': images,
@@ -75,11 +75,11 @@ class ImageIntelligenceApi:
             self.refresh_token(),
         )
 
-    def get_find_object_job(self, job_id):
-        return self.get_job('/find-object', job_id)
+    def get_detect_job(self, job_id):
+        return self.get_job('/detect', job_id)
 
-    def get_find_target_job(self, job_id):
-        return self.get_job('/find-target', job_id)
+    def get_match_job(self, job_id):
+        return self.get_job('/match', job_id)
 
     def poll_for_job_result(self, path, job_id, attempts):
         endpoint = self.base_endpoint + path + '/' + job_id
@@ -94,8 +94,8 @@ class ImageIntelligenceApi:
             time.sleep(0.5)
         raise ApiRequestTimeoutError('polling for job results took too long - jobId=%s' % response['id'])
 
-    def poll_for_target_result(self, job_id, attempts=MAX_POLL_ATTEMPTS):
-        return self.poll_for_job_result('/find-target', job_id, attempts)
+    def poll_for_match_result(self, job_id, attempts=MAX_POLL_ATTEMPTS):
+        return self.poll_for_job_result('/match', job_id, attempts)
 
-    def poll_for_object_result(self, job_id, attempts=MAX_POLL_ATTEMPTS):
-        return self.poll_for_job_result('/find-object', job_id, attempts)
+    def poll_for_detect_result(self, job_id, attempts=MAX_POLL_ATTEMPTS):
+        return self.poll_for_job_result('/detect', job_id, attempts)

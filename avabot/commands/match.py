@@ -26,7 +26,7 @@ class Match(Command):
         images = [{'url': image} for image in image_urls]
         target = {'class': 'person', 'images': [t.strip('<>') for t in targets]}
         try:
-            return self.ii_client.find_target(images, target, custom_id='ava-slackbot-' + str(uuid.uuid4()))
+            return self.ii_client.match(images, target, custom_id='ava-slackbot-' + str(uuid.uuid4()))
         except ApiRequestError as e:
             logging.info(f'failed to POST /v2/match - urls={image_urls}, error={e}')
             return
