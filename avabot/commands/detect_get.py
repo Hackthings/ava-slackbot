@@ -5,7 +5,7 @@ from avabot.commands import Command
 from avabot.exceptions.imageintelligence import ApiRequestError
 
 
-class GetFindObject(Command):
+class DetectGet(Command):
     def __init__(self, config, ii_client, slack_client, **kwargs):
         self.ii_client = ii_client
         self.slack_client = slack_client
@@ -16,7 +16,7 @@ class GetFindObject(Command):
         user = self.kwargs['user']
         job_id = results['id']
         status = results['status']
-        message = [f'<@{user}> OK `/find-object/{job_id}`']
+        message = [f'<@{user}> OK `/detect/{job_id}`']
         message.append(f'\n*Job Status:* {status}\n')
 
         if results['status'] == 'COMPLETED_SUCCESSFULLY':
@@ -32,9 +32,9 @@ class GetFindObject(Command):
     def request(self):
         job_id = self.kwargs['<job_id>']
 
-        logging.info(f'GET /v2/find-object - job_id={job_id}')
+        logging.info(f'GET /v2/detect - job_id={job_id}')
         try:
             return self.ii_client.get_find_object_job(job_id)
         except ApiRequestError as e:
-            logging.info(f'failed to GET /v2/find-object - job_id={job_id}, error={e}')
+            logging.info(f'failed to GET /v2/detect - job_id={job_id}, error={e}')
             return

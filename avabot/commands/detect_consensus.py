@@ -7,7 +7,7 @@ from avabot.exceptions.imageintelligence import ApiRequestError
 from avabot.constants import DEFAULT_CLASS
 
 
-class FindObjectConsensus(Command):
+class DetectConsensus(Command):
     MODEL_IDS = [
         '817453cc-3ead-46df-8db2-dff517c01fba',
         '2bc4b9ae-9f16-4a94-99eb-39473377dc5f',
@@ -21,7 +21,7 @@ class FindObjectConsensus(Command):
 
     def parse_results(self, results):
         user = self.kwargs['user']
-        results_message = [f'<@{user}> OK `/find-object/`:\n']
+        results_message = [f'<@{user}> OK `/detect/`:\n']
         target_image = results[0]['imageResults'][0]['url']
 
         for i, result in enumerate(results):
@@ -40,7 +40,7 @@ class FindObjectConsensus(Command):
         image_urls = self.kwargs['<urls>']
         classes = self.kwargs['--class'] or [DEFAULT_CLASS]
 
-        logging.info(f'posting to /v2/find-object - urls={image_urls}')
+        logging.info(f'posting to /v2/detect - urls={image_urls}')
 
         images = [{'url': image} for image in image_urls]
         classes = [{'class': cls, 'hitl': 'NEVER', 'model': model_id} for cls in classes]
@@ -48,11 +48,11 @@ class FindObjectConsensus(Command):
         try:
             response = self.ii_client.find_object(images, classes, custom_id='ava-slackbot-' + str(uuid.uuid4()))
         except ApiRequestError as e:
-            logging.info(f'failed to POST /v2/find-object - urls={image_urls}, error={e}')
+            logging.info(f'failed to POST /v2/detect - urls={image_urls}, error={e}')
             return
 
         job_id = response['id']
-        logging.info(f'successfully POST\'d to /v2/find-object, polling results -url=${image_urls} - jobId={job_id}')
+        logging.info(f'successfully POST\'d to /v2/detect, polling results -url=${image_urls} - jobId={job_id}')
         return self.ii_client.poll_for_object_result(response['id'])
 
     def request(self):

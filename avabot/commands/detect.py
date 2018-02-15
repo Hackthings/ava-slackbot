@@ -7,7 +7,7 @@ from avabot.exceptions.imageintelligence import ApiRequestError
 from avabot.constants import DEFAULT_CLASS, DEFAULT_HITL
 
 
-class FindObject(Command):
+class Detect(Command):
     def __init__(self, config, ii_client, slack_client, **kwargs):
         self.ii_client = ii_client
         self.slack_client = slack_client
@@ -18,7 +18,7 @@ class FindObject(Command):
         user = self.kwargs['user']
         job_id = results['id']
         status = results['status']
-        results_message = [f'<@{user}> OK `/find-object/{job_id}` *{status}*:\n']
+        results_message = [f'<@{user}> OK `/detect/{job_id}` *{status}*:\n']
 
         for image_result in results['imageResults']:
             img_result_url = image_result['url']
@@ -38,14 +38,14 @@ class FindObject(Command):
         images = [{'url': image} for image in image_urls]
         classes = [{'class': cls, 'hitl': hitl, 'model': model_id} for cls in classes]
 
-        logging.info(f'posting to /v2/find-object - url={image_urls}')
+        logging.info(f'posting to /v2/detect - url={image_urls}')
 
         try:
             response = self.ii_client.find_object(images, classes, custom_id='ava-slackbot-' + str(uuid.uuid4()))
             result = self.ii_client.poll_for_object_result(response['id'])
         except ApiRequestError as e:
-            logging.info(f'failed to POST /v2/find-object - urls={image_urls}, error={e}')
+            logging.info(f'failed to POST /v2/detect - urls={image_urls}, error={e}')
             return
 
-        logging.info(f'successfully POST\'d to /v2/find-object')
+        logging.info(f'successfully POST\'d to /v2/detect')
         return result
