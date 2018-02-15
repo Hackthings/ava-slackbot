@@ -29,4 +29,4 @@ class Match(Command):
             return self.ii_client.match(images, target, custom_id='ava-slackbot-' + str(uuid.uuid4()))
         except ApiRequestError as e:
             logging.info(f'failed to POST /v2/match - urls={image_urls}, error={e}')
-            return
+            raise e

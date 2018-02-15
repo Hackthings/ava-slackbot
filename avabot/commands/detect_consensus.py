@@ -49,7 +49,7 @@ class DetectConsensus(Command):
             response = self.ii_client.detect(images, classes, custom_id='ava-slackbot-' + str(uuid.uuid4()))
         except ApiRequestError as e:
             logging.info(f'failed to POST /v2/detect - urls={image_urls}, error={e}')
-            return
+            raise e
 
         job_id = response['id']
         logging.info(f'successfully POST\'d to /v2/detect, polling results -url=${image_urls} - jobId={job_id}')

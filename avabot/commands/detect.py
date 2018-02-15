@@ -45,7 +45,7 @@ class Detect(Command):
             result = self.ii_client.poll_for_detect_result(response['id'])
         except ApiRequestError as e:
             logging.info(f'failed to POST /v2/detect - urls={image_urls}, error={e}')
-            return
+            raise e
 
         logging.info(f'successfully POST\'d to /v2/detect')
         return result
