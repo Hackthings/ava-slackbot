@@ -17,11 +17,11 @@ class MessageParser(Parser):
     __doc__ = """Ava Slackbot
 
 Usage:
-    @ava (fo|find-object) <urls>... [(--class=<class>)...] [--model=<model_id>] [--hitl=<hitl>] [--raw-json]
-    @ava (gfo|get-find-object) <job_id> [--raw-json]
-    @ava (foc|find-object-consensus) <urls>... [(--class=<class>)...] [--raw-json]
-    @ava (ft|find-target) <urls>... (--target=<target>)... [--raw-json]
-    @ava (gft|get-find-target) <job_id> [--raw-json]
+    @ava (d|detect) <urls>... [(--class=<class>)...] [--model=<model_id>] [--verify=<verify>] [--raw-json]
+    @ava (gd|get-detect-job) <job_id> [--raw-json]
+    @ava (dc|detect-consensus) <urls>... [(--class=<class>)...] [--raw-json]
+    @ava (m|match) <urls>... (--target=<target>)... [--raw-json]
+    @ava (gm|get-match-job) <job_id> [--raw-json]
     @ava (--help|--version)
 
 Arguments:
@@ -30,9 +30,9 @@ Arguments:
 
 Options:
     -c --class=<class>     specify the class you want to find in the url
-    -m --model=<model_id>  specify model to use
-    -t --target=<target>   target image urls for ft requests
-    -l --hitl=<hitl>       additional verification for fo requests (AUTO, ALWAYS, NEVER) [default: %s]
+    --model=<model_id>     specify model to use
+    -t --target=<target>   target image urls for match requests
+    --verify=<verify>      additional verification for detect requests (AUTO, NEVER, ALWAYS) [default: %s]
     -r --raw-json          returns the raw JSON response from the Image Intelligence API
     -h --help              shows this
     -v --version           shows version

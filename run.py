@@ -34,15 +34,15 @@ def handle_message(slack_client, ii_client, config, args):
                 args['channel'],
                 args['user']
             )
-        elif any([args['fo'], args['find-object']]):
+        elif any([args['d'], args['detect']]):
             Detect(config, ii_client, slack_client, **args)
-        elif any([args['gfo'], args['get-find-object']]):
+        elif any([args['gd'], args['get-detect-job']]):
             DetectGet(config, ii_client, slack_client, **args)
-        elif any([args['foc'], args['find-object-consensus']]):
+        elif any([args['dc'], args['detect-consensus']]):
             DetectConsensus(config, ii_client, slack_client, **args)
-        elif any([args['ft'], args['find-target']]):
+        elif any([args['m'], args['match']]):
             Match(config, ii_client, slack_client, **args)
-        elif any([args['gft'], args['get-find-target']]):
+        elif any([args['gm'], args['get-match-job']]):
             MatchGet(config, ii_client, slack_client, **args)
         else:
             logging.error('unexpected args %s' % args)
