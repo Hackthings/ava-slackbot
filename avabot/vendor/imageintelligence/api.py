@@ -68,6 +68,20 @@ class ImageIntelligenceApi:
             },
         )
 
+    def ask(self, images, question, webhook_url=None, feed_id=None, custom_id=None):
+        return self.api_request(
+            requests.post,
+            self.base_endpoint + '/ask',
+            self.refresh_token(),
+            payload={
+                'images': images,
+                'question': question,
+                'webhookUrl': webhook_url,
+                'feedId': feed_id,
+                'customId': custom_id,
+            },
+        )
+
     def get_job(self, path, job_id):
         return self.api_request(
             requests.get,
@@ -80,6 +94,9 @@ class ImageIntelligenceApi:
 
     def get_match_job(self, job_id):
         return self.get_job('/match', job_id)
+
+    def get_ask_job(self, job_id):
+        return self.get_job('/ask', job_id)
 
     def poll_for_job_result(self, path, job_id, attempts):
         endpoint = self.base_endpoint + path + '/' + job_id
