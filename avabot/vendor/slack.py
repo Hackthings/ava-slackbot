@@ -41,15 +41,14 @@ class Slack:
         user = message.get('user')
         type_ = message.get('type')
         text = message.get('text')
-
-        # replace slack's unicode quotes with the normal ones so it can be parsed correcty
-        text = str(text).replace(u'\u201c', '"').replace(u'\u201d', '"')
-
         channel = message.get('channel')
 
         if not self._should_respond(type_, text, channel, user):
             logging.debug('denied message from user - message=%s - user=%s' % (text, user))
             return None
+
+        # replace slack's unicode quotes with the normal ones so it can be parsed correcty
+        text = str(text).replace(u'\u201c', '"').replace(u'\u201d', '"')
 
         logging.info('received acceptable message from user - message=%s - user=%s' % (text, user))
         try:
