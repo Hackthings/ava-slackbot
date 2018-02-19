@@ -22,6 +22,8 @@ Usage:
     @ava (dc|detect-consensus) <urls>... [(--class=<class>)...] [--raw-json]
     @ava (m|match) <urls>... (--target=<target>)... [--raw-json]
     @ava (gm|get-match-job) <job_id> [--raw-json]
+    @ava (a|ask) <urls>... --question=<question> [--raw-json]
+    @ava (ga|get-ask-job) <job_id> [--raw-json]
     @ava (--help|--version)
 
 Arguments:
@@ -31,8 +33,9 @@ Arguments:
 Options:
     -c --class=<class>     specify the class you want to find in the url
     --model=<model_id>     specify model to use
-    -t --target=<target>   target image urls for match requests
     --verify=<verify>      additional verification for detect requests (AUTO, NEVER, ALWAYS) [default: %s]
+    -t --target=<target>   target image urls for match requests
+    --question=<question>  question about the images for ask requests
     -r --raw-json          returns the raw JSON response from the Image Intelligence API
     -h --help              shows this
     -v --version           shows version

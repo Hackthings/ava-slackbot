@@ -8,6 +8,8 @@ from avabot.commands.detect import Detect
 from avabot.commands.detect_get import DetectGet
 from avabot.commands.match import Match
 from avabot.commands.match_get import MatchGet
+from avabot.commands.ask import Ask
+from avabot.commands.ask_get import AskGet
 from avabot.commands.detect_consensus import DetectConsensus
 from avabot.config import load as load_config
 from avabot.exceptions import AvaSlackbotException
@@ -44,6 +46,10 @@ def handle_message(slack_client, ii_client, config, args):
             Match(config, ii_client, slack_client, **args)
         elif any([args['gm'], args['get-match-job']]):
             MatchGet(config, ii_client, slack_client, **args)
+        elif any([args['a'], args['ask']]):
+            Ask(config, ii_client, slack_client, **args)
+        elif any([args['ga'], args['get-ask-job']]):
+            AskGet(config, ii_client, slack_client, **args)
         else:
             logging.error('unexpected args %s' % args)
     except AvaSlackbotException as e:
