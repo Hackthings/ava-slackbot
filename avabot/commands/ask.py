@@ -16,7 +16,7 @@ class Ask(Command):
     def parse_results(self, results):
         user = self.kwargs['user']
         job_id = results['id']
-        return f'<@{user}> OK -- submitted `/ask` job id `{job_id}`\n'
+        return f'<@{user}> OK -- submitted `/ask` job successfuly.\n\nCheck the status by sending `@ava get-ask-job {job_id}`.'
 
     def request(self):
         image_urls = self.kwargs['<urls>']

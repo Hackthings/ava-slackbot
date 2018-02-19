@@ -16,7 +16,7 @@ class Match(Command):
     def parse_results(self, results):
         user = self.kwargs['user']
         job_id = results['id']
-        return f'<@{user}> OK -- submitted `/match` job id `{job_id}`\n'
+        return f'<@{user}> OK -- submitted `/match` job successfuly.\n\nCheck the status by sending `@ava get-match-job {job_id}`.'
 
     def request(self):
         image_urls = self.kwargs['<urls>']
