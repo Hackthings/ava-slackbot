@@ -38,9 +38,10 @@ Options:
     --verify=<verify>      additional verification for detect requests (AUTO, NEVER, ALWAYS) [default: %s]
     -t --target=<target>   target image urls for match requests
     --question=<question>  question about the images for ask requests
+    --fps=<fps>            number of frames to be classified per second, for video requests
     -r --raw-json          returns the raw JSON response from the Image Intelligence API
     -h --help              shows this
-    -V --version           shows version
+    --version              shows version
 
 Author: %s <%s>, Image Intelligence
 GitHub: https://github.com/ImageIntelligence/ava-slackbot
