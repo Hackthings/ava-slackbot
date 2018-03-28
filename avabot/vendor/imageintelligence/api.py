@@ -114,7 +114,7 @@ class ImageIntelligenceApi:
         return self.get_job('/ask', job_id)
 
     def get_video_job(self, job_id):
-        return self.get_job('/ask', job_id)
+        return self.get_job('/video', job_id)
 
     def poll_for_job_result(self, path, job_id, attempts):
         endpoint = self.base_endpoint + path + '/' + job_id
