@@ -39,4 +39,4 @@ class AskGet(Command):
             return self.ii_client.get_ask_job(job_id)
         except ApiRequestError as e:
             logging.info(f'failed to GET /v2/ask - job_id={job_id}, error={e}')
-            raise e
+            raise

@@ -28,4 +28,4 @@ class Ask(Command):
             return self.ii_client.ask(images, question, custom_id='ava-slackbot-' + str(uuid.uuid4()))
         except ApiRequestError as e:
             logging.info(f'failed to POST /v2/ask - urls={image_urls}, error={e}')
-            raise e
+            raise

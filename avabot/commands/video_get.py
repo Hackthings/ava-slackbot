@@ -40,4 +40,4 @@ class VideoGet(Command):
             return self.ii_client.get_video_job(job_id)
         except ApiRequestError as e:
             logging.info(f'failed to GET /v2/video - job_id={job_id}, error={e}')
-            raise e
+            raise

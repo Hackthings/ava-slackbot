@@ -40,4 +40,4 @@ class MatchGet(Command):
             return self.ii_client.get_match_job(job_id)
         except ApiRequestError as e:
             logging.info(f'failed to GET /v2/match - job_id={job_id}, error={e}')
-            raise e
+            raise

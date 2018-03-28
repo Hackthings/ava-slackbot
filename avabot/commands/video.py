@@ -48,7 +48,7 @@ class Video(Command):
             result = self.ii_client.poll_for_video_result(response['id'])
         except ApiRequestError as e:
             logging.info(f'failed to POST /v2/video - urls={video_url}, error={e}')
-            raise e
+            raise
 
         logging.info(f'successfully POST\'d to /v2/video')
         return result
