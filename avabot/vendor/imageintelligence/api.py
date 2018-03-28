@@ -82,6 +82,21 @@ class ImageIntelligenceApi:
             },
         )
 
+    def video(self, video, fps, classes, webhook_url=None, feed_id=None, custom_id=None):
+        return self.api_request(
+            requests.post,
+            self.base_endpoint + '/video',
+            self.refresh_token(),
+            payload={
+                'video': video,
+                'classes': classes,
+                'fps': fps,
+                'webhookUrl': webhook_url,
+                'feedId': feed_id,
+                'customId': custom_id,
+            },
+        )
+
     def get_job(self, path, job_id):
         return self.api_request(
             requests.get,
@@ -96,6 +111,9 @@ class ImageIntelligenceApi:
         return self.get_job('/match', job_id)
 
     def get_ask_job(self, job_id):
+        return self.get_job('/ask', job_id)
+
+    def get_video_job(self, job_id):
         return self.get_job('/ask', job_id)
 
     def poll_for_job_result(self, path, job_id, attempts):
@@ -116,3 +134,6 @@ class ImageIntelligenceApi:
 
     def poll_for_detect_result(self, job_id, attempts=MAX_POLL_ATTEMPTS):
         return self.poll_for_job_result('/detect', job_id, attempts)
+
+    def poll_for_video_result(self, job_id, attempts=MAX_POLL_ATTEMPTS):
+        return self.poll_for_job_result('/video', job_id, attempts)
