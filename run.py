@@ -10,6 +10,7 @@ from avabot.commands.match import Match
 from avabot.commands.match_get import MatchGet
 from avabot.commands.ask import Ask
 from avabot.commands.ask_get import AskGet
+from avabot.commands.video import Video
 from avabot.commands.detect_consensus import DetectConsensus
 from avabot.config import load as load_config
 from avabot.exceptions import AvaSlackbotException
@@ -50,6 +51,8 @@ def handle_message(slack_client, ii_client, config, args):
             Ask(config, ii_client, slack_client, **args)
         elif any([args['ga'], args['get-ask-job']]):
             AskGet(config, ii_client, slack_client, **args)
+        elif any([args['v'], args['video']]):
+            Video(config, ii_client, slack_client, **args)
         else:
             logging.error('unexpected args %s' % args)
     except AvaSlackbotException as e:

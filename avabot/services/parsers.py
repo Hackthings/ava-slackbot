@@ -5,7 +5,7 @@ import docopt
 from avabot import __author__, __author_email__
 from avabot import __version__
 from avabot.exceptions.parse import ParseCommandException
-from avabot.constants import DEFAULT_CLASS, DEFAULT_HITL
+from avabot.constants import DEFAULT_HITL
 
 
 class Parser:
@@ -24,6 +24,8 @@ Usage:
     @ava (gm|get-match-job) <job_id> [--raw-json]
     @ava (a|ask) <urls>... --question=<question> [--raw-json]
     @ava (ga|get-ask-job) <job_id> [--raw-json]
+    @ava (v|video) <url> [--fps=<fps>] [(--class=<class>)...] [--raw-json]
+    @ava (gv|get-video-job) <job_id> [--raw-json]
     @ava (--help|--version)
 
 Arguments:
@@ -38,7 +40,7 @@ Options:
     --question=<question>  question about the images for ask requests
     -r --raw-json          returns the raw JSON response from the Image Intelligence API
     -h --help              shows this
-    -v --version           shows version
+    -V --version           shows version
 
 Author: %s <%s>, Image Intelligence
 GitHub: https://github.com/ImageIntelligence/ava-slackbot
